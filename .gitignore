@@ -1,5 +1,6 @@
 .vs/
-bin/*
+bin/Debug/*
+bin/Release/*
 obj/*
 !bin/Debug/vPilot-Pushover.ini
 !bin/Release/vPilot-Pushover.ini
