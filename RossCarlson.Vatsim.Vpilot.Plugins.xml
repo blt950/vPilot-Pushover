@@ -1,0 +1,761 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>RossCarlson.Vatsim.Vpilot.Plugins</name>
+    </assembly>
+    <members>
+        <member name="T:RossCarlson.Vatsim.Vpilot.Plugins.Events.AircraftUpdatedEventArgs">
+            <summary>
+            Arguments for the AircraftUpdated event.
+            </summary>
+        </member>
+        <member name="P:RossCarlson.Vatsim.Vpilot.Plugins.Events.AircraftUpdatedEventArgs.Callsign">
+            <summary>
+            The aircraft callsign.
+            </summary>
+        </member>
+        <member name="P:RossCarlson.Vatsim.Vpilot.Plugins.Events.AircraftUpdatedEventArgs.Latitude">
+            <summary>
+            The aircraft latitude.
+            </summary>
+        </member>
+        <member name="P:RossCarlson.Vatsim.Vpilot.Plugins.Events.AircraftUpdatedEventArgs.Longitude">
+            <summary>
+            The aircraft longitude.
+            </summary>
+        </member>
+        <member name="P:RossCarlson.Vatsim.Vpilot.Plugins.Events.AircraftUpdatedEventArgs.Altitude">
+            <summary>
+            The aircraft altitude.
+            </summary>
+        </member>
+        <member name="P:RossCarlson.Vatsim.Vpilot.Plugins.Events.AircraftUpdatedEventArgs.PressureAltitude">
+            <summary>
+            The aircraft's pressure altitude.
+            </summary>
+        </member>
+        <member name="P:RossCarlson.Vatsim.Vpilot.Plugins.Events.AircraftUpdatedEventArgs.Pitch">
+            <summary>
+            The aircraft pitch.
+            </summary>
+        </member>
+        <member name="P:RossCarlson.Vatsim.Vpilot.Plugins.Events.AircraftUpdatedEventArgs.Bank">
+            <summary>
+            The aircraft bank.
+            </summary>
+        </member>
+        <member name="P:RossCarlson.Vatsim.Vpilot.Plugins.Events.AircraftUpdatedEventArgs.Heading">
+            <summary>
+            The aircraft heading.
+            </summary>
+        </member>
+        <member name="P:RossCarlson.Vatsim.Vpilot.Plugins.Events.AircraftUpdatedEventArgs.Speed">
+            <summary>
+            The aircraft speed.
+            </summary>
+        </member>
+        <member name="M:RossCarlson.Vatsim.Vpilot.Plugins.Events.AircraftUpdatedEventArgs.#ctor(System.String,System.Double,System.Double,System.Double,System.Double,System.Double,System.Double,System.Double,System.Double)">
+            <summary>
+            Initializes a new instance.
+            </summary>
+            <param name="callsign">The aircraft callsign.</param>
+            <param name="lat">The aircraft latitude.</param>
+            <param name="lon">The aircraft longitude.</param>
+            <param name="alt">The aircraft altitude.</param>
+            <param name="pressureAlt">The aircraft's pressure altitude.</param>
+            <param name="pitch">The aircraft pitch.</param>
+            <param name="bank">The aircraft bank.</param>
+            <param name="heading">The aircraft heading.</param>
+            <param name="speed">The aircraft speed.</param>
+        </member>
+        <member name="T:RossCarlson.Vatsim.Vpilot.Plugins.Events.AircraftDeletedEventArgs">
+            <summary>
+            Arguments for the AircraftDeleted event.
+            </summary>
+        </member>
+        <member name="P:RossCarlson.Vatsim.Vpilot.Plugins.Events.AircraftDeletedEventArgs.Callsign">
+            <summary>
+            The aircraft callsign.
+            </summary>
+        </member>
+        <member name="M:RossCarlson.Vatsim.Vpilot.Plugins.Events.AircraftDeletedEventArgs.#ctor(System.String)">
+            <summary>
+            Initializes a new instance.
+            </summary>
+            <param name="callsign">The aircraft callsign.</param>
+        </member>
+        <member name="T:RossCarlson.Vatsim.Vpilot.Plugins.Events.AircraftAddedEventArgs">
+            <summary>
+            Arguments for the AircraftAdded event.
+            </summary>
+        </member>
+        <member name="P:RossCarlson.Vatsim.Vpilot.Plugins.Events.AircraftAddedEventArgs.Callsign">
+            <summary>
+            The aircraft callsign.
+            </summary>
+        </member>
+        <member name="P:RossCarlson.Vatsim.Vpilot.Plugins.Events.AircraftAddedEventArgs.TypeCode">
+            <summary>
+            The aircraft type code.
+            </summary>
+        </member>
+        <member name="P:RossCarlson.Vatsim.Vpilot.Plugins.Events.AircraftAddedEventArgs.Latitude">
+            <summary>
+            The aircraft latitude.
+            </summary>
+        </member>
+        <member name="P:RossCarlson.Vatsim.Vpilot.Plugins.Events.AircraftAddedEventArgs.Longitude">
+            <summary>
+            The aircraft longitude.
+            </summary>
+        </member>
+        <member name="P:RossCarlson.Vatsim.Vpilot.Plugins.Events.AircraftAddedEventArgs.Altitude">
+            <summary>
+            The aircraft altitude.
+            </summary>
+        </member>
+        <member name="P:RossCarlson.Vatsim.Vpilot.Plugins.Events.AircraftAddedEventArgs.PressureAltitude">
+            <summary>
+            The aircraft's pressure altitude.
+            </summary>
+        </member>
+        <member name="P:RossCarlson.Vatsim.Vpilot.Plugins.Events.AircraftAddedEventArgs.Pitch">
+            <summary>
+            The aircraft pitch.
+            </summary>
+        </member>
+        <member name="P:RossCarlson.Vatsim.Vpilot.Plugins.Events.AircraftAddedEventArgs.Bank">
+            <summary>
+            The aircraft bank.
+            </summary>
+        </member>
+        <member name="P:RossCarlson.Vatsim.Vpilot.Plugins.Events.AircraftAddedEventArgs.Heading">
+            <summary>
+            The aircraft heading.
+            </summary>
+        </member>
+        <member name="P:RossCarlson.Vatsim.Vpilot.Plugins.Events.AircraftAddedEventArgs.Speed">
+            <summary>
+            The aircraft speed.
+            </summary>
+        </member>
+        <member name="M:RossCarlson.Vatsim.Vpilot.Plugins.Events.AircraftAddedEventArgs.#ctor(System.String,System.String,System.Double,System.Double,System.Double,System.Double,System.Double,System.Double,System.Double,System.Double)">
+            <summary>
+            Initializes a new instance.
+            </summary>
+            <param name="callsign">The aircraft callsign.</param>
+            <param name="typeCode">The aircraft type code.</param>
+            <param name="lat">The aircraft latitude.</param>
+            <param name="lon">The aircraft longitude.</param>
+            <param name="alt">The aircraft altitude.</param>
+            <param name="pressureAlt">The aircraft's pressure altitude.</param>
+            <param name="pitch">The aircraft pitch.</param>
+            <param name="bank">The aircraft bank.</param>
+            <param name="heading">The aircraft heading.</param>
+            <param name="speed">The aircraft speed.</param>
+        </member>
+        <member name="T:RossCarlson.Vatsim.Vpilot.Plugins.Events.PrivateMessageReceivedEventArgs">
+            <summary>
+            Arguments for the PrivateMessageReceived event.
+            </summary>
+        </member>
+        <member name="P:RossCarlson.Vatsim.Vpilot.Plugins.Events.PrivateMessageReceivedEventArgs.From">
+            <summary>
+            The sender's callsign.
+            </summary>
+        </member>
+        <member name="P:RossCarlson.Vatsim.Vpilot.Plugins.Events.PrivateMessageReceivedEventArgs.Message">
+            <summary>
+            The message contents.
+            </summary>
+        </member>
+        <member name="M:RossCarlson.Vatsim.Vpilot.Plugins.Events.PrivateMessageReceivedEventArgs.#ctor(System.String,System.String)">
+            <summary>
+            Initializes a new instance.
+            </summary>
+            <param name="from">The sender's callsign.</param>
+            <param name="message">The message contents.</param>
+        </member>
+        <member name="T:RossCarlson.Vatsim.Vpilot.Plugins.Events.NetworkConnectedEventArgs">
+            <summary>
+            Arguments for the NetworkConnected event.
+            </summary>
+        </member>
+        <member name="P:RossCarlson.Vatsim.Vpilot.Plugins.Events.NetworkConnectedEventArgs.Callsign">
+            <summary>
+            The callsign specified for the connection.
+            </summary>
+        </member>
+        <member name="P:RossCarlson.Vatsim.Vpilot.Plugins.Events.NetworkConnectedEventArgs.TypeCode">
+            <summary>
+            The aircraft type code specified for the connection.
+            </summary>
+        </member>
+        <member name="P:RossCarlson.Vatsim.Vpilot.Plugins.Events.NetworkConnectedEventArgs.SelcalCode">
+            <summary>
+            The SELCAL code specified for the connection, if any.
+            </summary>
+        </member>
+        <member name="P:RossCarlson.Vatsim.Vpilot.Plugins.Events.NetworkConnectedEventArgs.ObserverMode">
+            <summary>
+            Whether or not the connection is in observer mode.
+            </summary>
+        </member>
+        <member name="M:RossCarlson.Vatsim.Vpilot.Plugins.Events.NetworkConnectedEventArgs.#ctor(System.String,System.String,System.String,System.Boolean)">
+            <summary>
+            Initializes a new instance.
+            </summary>
+            <param name="callsign">The callsign specified for the connection.</param>
+            <param name="typeCode">The aircraft type code specified for the connection.</param>
+            <param name="selcalCode">The SELCAL code specified for the connection, if any.</param>
+            <param name="observerMode">Whether or not the connection is in observer mode.</param>
+        </member>
+        <member name="T:RossCarlson.Vatsim.Vpilot.Plugins.Events.RadioMessageReceivedEventArgs">
+            <summary>
+            Arguments for the RadioMessageReceived event.
+            </summary>
+        </member>
+        <member name="P:RossCarlson.Vatsim.Vpilot.Plugins.Events.RadioMessageReceivedEventArgs.Frequencies">
+            <summary>
+            The list of frequencies the message was transmitted on. The leading 1 and the decimal point are dropped. E.g. 123.725 is formatted as 23725.
+            </summary>
+        </member>
+        <member name="P:RossCarlson.Vatsim.Vpilot.Plugins.Events.RadioMessageReceivedEventArgs.From">
+            <summary>
+            The sender's callsign.
+            </summary>
+        </member>
+        <member name="P:RossCarlson.Vatsim.Vpilot.Plugins.Events.RadioMessageReceivedEventArgs.Message">
+            <summary>
+            The message contents.
+            </summary>
+        </member>
+        <member name="M:RossCarlson.Vatsim.Vpilot.Plugins.Events.RadioMessageReceivedEventArgs.#ctor(System.Int32[],System.String,System.String)">
+            <summary>
+            Initializes a new instance.
+            </summary>
+            <param name="frequencies">The list of frequencies the message was transmitted on. The leading 1 and the decimal point are dropped. E.g. 123.725 is formatted as 23725.</param>
+            <param name="from">The sender's callsign.</param>
+            <param name="message">The message contents.</param>
+        </member>
+        <member name="T:RossCarlson.Vatsim.Vpilot.Plugins.Events.BroadcastMessageReceivedEventArgs">
+            <summary>
+            Arguments for the BroadcastMessageReceived event.
+            </summary>
+        </member>
+        <member name="P:RossCarlson.Vatsim.Vpilot.Plugins.Events.BroadcastMessageReceivedEventArgs.From">
+            <summary>
+            The sender's callsign.
+            </summary>
+        </member>
+        <member name="P:RossCarlson.Vatsim.Vpilot.Plugins.Events.BroadcastMessageReceivedEventArgs.Message">
+            <summary>
+            The message contents.
+            </summary>
+        </member>
+        <member name="M:RossCarlson.Vatsim.Vpilot.Plugins.Events.BroadcastMessageReceivedEventArgs.#ctor(System.String,System.String)">
+            <summary>
+            Initializes a new instance.
+            </summary>
+            <param name="from">The sender's callsign.</param>
+            <param name="message">The message contents.</param>
+        </member>
+        <member name="T:RossCarlson.Vatsim.Vpilot.Plugins.Events.MetarReceivedEventArgs">
+            <summary>
+            Arguments for the MetarReceived event.
+            </summary>
+        </member>
+        <member name="P:RossCarlson.Vatsim.Vpilot.Plugins.Events.MetarReceivedEventArgs.Metar">
+            <summary>
+            The full raw METAR.
+            </summary>
+        </member>
+        <member name="M:RossCarlson.Vatsim.Vpilot.Plugins.Events.MetarReceivedEventArgs.#ctor(System.String)">
+            <summary>
+            Initializes a new instance.
+            </summary>
+            <param name="metar">The full raw METAR.</param>
+        </member>
+        <member name="T:RossCarlson.Vatsim.Vpilot.Plugins.Events.AtisReceivedEventArgs">
+            <summary>
+            Arguments for the AtisReceived event.
+            </summary>
+        </member>
+        <member name="P:RossCarlson.Vatsim.Vpilot.Plugins.Events.AtisReceivedEventArgs.From">
+            <summary>
+            The sender's callsign.
+            </summary>
+        </member>
+        <member name="P:RossCarlson.Vatsim.Vpilot.Plugins.Events.AtisReceivedEventArgs.Lines">
+            <summary>
+            The ATIS lines.
+            </summary>
+        </member>
+        <member name="M:RossCarlson.Vatsim.Vpilot.Plugins.Events.AtisReceivedEventArgs.#ctor(System.String,System.Collections.Generic.List{System.String})">
+            <summary>
+            Initializes a new instance.
+            </summary>
+            <param name="from">The sender's callsign.</param>
+            <param name="lines">The ATIS lines.</param>
+        </member>
+        <member name="T:RossCarlson.Vatsim.Vpilot.Plugins.Events.ControllerAddedEventArgs">
+            <summary>
+            Arguments for the ControllerAdded event.
+            </summary>
+        </member>
+        <member name="P:RossCarlson.Vatsim.Vpilot.Plugins.Events.ControllerAddedEventArgs.Callsign">
+            <summary>
+            The controller's callsign.
+            </summary>
+        </member>
+        <member name="P:RossCarlson.Vatsim.Vpilot.Plugins.Events.ControllerAddedEventArgs.Frequency">
+            <summary>
+            The controller's primary frequency.
+            </summary>
+        </member>
+        <member name="P:RossCarlson.Vatsim.Vpilot.Plugins.Events.ControllerAddedEventArgs.Latitude">
+            <summary>
+            The controller's latitude.
+            </summary>
+        </member>
+        <member name="P:RossCarlson.Vatsim.Vpilot.Plugins.Events.ControllerAddedEventArgs.Longitude">
+            <summary>
+            The controller's longitude.
+            </summary>
+        </member>
+        <member name="M:RossCarlson.Vatsim.Vpilot.Plugins.Events.ControllerAddedEventArgs.#ctor(System.String,System.Int32,System.Double,System.Double)">
+            <summary>
+            Initializes a new instance.
+            </summary>
+            <param name="callsign">The controller's callsign.</param>
+            <param name="frequency">The controller's primary frequency.</param>
+            <param name="latitude">The controller's latitude.</param>
+            <param name="longitude">The controller's longitude.</param>
+        </member>
+        <member name="T:RossCarlson.Vatsim.Vpilot.Plugins.Events.ControllerDeletedEventArgs">
+            <summary>
+            Arguments for the ControllerDeleted event.
+            </summary>
+        </member>
+        <member name="P:RossCarlson.Vatsim.Vpilot.Plugins.Events.ControllerDeletedEventArgs.Callsign">
+            <summary>
+            The controller's callsign.
+            </summary>
+        </member>
+        <member name="M:RossCarlson.Vatsim.Vpilot.Plugins.Events.ControllerDeletedEventArgs.#ctor(System.String)">
+            <summary>
+            Initializes a new instance.
+            </summary>
+            <param name="callsign">The controller's callsign.</param>
+        </member>
+        <member name="T:RossCarlson.Vatsim.Vpilot.Plugins.Events.ControllerFrequencyChangedEventArgs">
+            <summary>
+            Arguments for the ControllerFrequencyChanged event.
+            </summary>
+        </member>
+        <member name="P:RossCarlson.Vatsim.Vpilot.Plugins.Events.ControllerFrequencyChangedEventArgs.Callsign">
+            <summary>
+            The controller's callsign.
+            </summary>
+        </member>
+        <member name="P:RossCarlson.Vatsim.Vpilot.Plugins.Events.ControllerFrequencyChangedEventArgs.NewFrequency">
+            <summary>
+            The controller's new primary frequency.
+            </summary>
+        </member>
+        <member name="M:RossCarlson.Vatsim.Vpilot.Plugins.Events.ControllerFrequencyChangedEventArgs.#ctor(System.String,System.Int32)">
+            <summary>
+            Initializes a new instance.
+            </summary>
+            <param name="callsign">The controller's callsign.</param>
+            <param name="newFrequency">The controller's new primary frequency.</param>
+        </member>
+        <member name="T:RossCarlson.Vatsim.Vpilot.Plugins.Events.ControllerLocationChangedEventArgs">
+            <summary>
+            Arguments for the ControllerLocationChanged event.
+            </summary>
+        </member>
+        <member name="P:RossCarlson.Vatsim.Vpilot.Plugins.Events.ControllerLocationChangedEventArgs.Callsign">
+            <summary>
+            The controller's callsign.
+            </summary>
+        </member>
+        <member name="P:RossCarlson.Vatsim.Vpilot.Plugins.Events.ControllerLocationChangedEventArgs.NewLatitude">
+            <summary>
+            The controller's new latitude.
+            </summary>
+        </member>
+        <member name="P:RossCarlson.Vatsim.Vpilot.Plugins.Events.ControllerLocationChangedEventArgs.NewLongitude">
+            <summary>
+            The controller's new longitude.
+            </summary>
+        </member>
+        <member name="M:RossCarlson.Vatsim.Vpilot.Plugins.Events.ControllerLocationChangedEventArgs.#ctor(System.String,System.Double,System.Double)">
+            <summary>
+            Initializes a new instance.
+            </summary>
+            <param name="callsign">The controller's callsign.</param>
+            <param name="newLatitude">The controller's new latitude.</param>
+            <param name="newLongitude">The controller's new longitude.</param>
+        </member>
+        <member name="T:RossCarlson.Vatsim.Vpilot.Plugins.Events.SelcalAlertReceivedEventArgs">
+            <summary>
+            Arguments for the SelcalAlertReceived event.
+            </summary>
+        </member>
+        <member name="P:RossCarlson.Vatsim.Vpilot.Plugins.Events.SelcalAlertReceivedEventArgs.Frequencies">
+            <summary>
+            The frequencies on which the SELCAL alert was received.
+            </summary>
+        </member>
+        <member name="P:RossCarlson.Vatsim.Vpilot.Plugins.Events.SelcalAlertReceivedEventArgs.From">
+            <summary>
+            The callsign for the controller that sent the SELCAL alert.
+            </summary>
+        </member>
+        <member name="M:RossCarlson.Vatsim.Vpilot.Plugins.Events.SelcalAlertReceivedEventArgs.#ctor(System.Int32[],System.String)">
+            <summary>
+            Initializes a new instance.
+            </summary>
+            <param name="frequencies">The frequencies on which the alert was received.</param>
+            <param name="from">The callsign for the controller that sent the SELCAL alert.</param>
+        </member>
+        <member name="T:RossCarlson.Vatsim.Vpilot.Plugins.Events.FlightPlanReceivedEventArgs">
+            <summary>
+            Arguments for the FileFlightPlanReceived event.
+            </summary>
+        </member>
+        <member name="P:RossCarlson.Vatsim.Vpilot.Plugins.Events.FlightPlanReceivedEventArgs.Callsign">
+            <summary>
+            The callsign.
+            </summary>
+        </member>
+        <member name="P:RossCarlson.Vatsim.Vpilot.Plugins.Events.FlightPlanReceivedEventArgs.DepartureAirport">
+            <summary>
+            The departure airport. Three or four characters, upper case.
+            </summary>
+        </member>
+        <member name="P:RossCarlson.Vatsim.Vpilot.Plugins.Events.FlightPlanReceivedEventArgs.DestinationAirport">
+            <summary>
+            The destination airport. Three or four characters, upper case.
+            </summary>
+        </member>
+        <member name="P:RossCarlson.Vatsim.Vpilot.Plugins.Events.FlightPlanReceivedEventArgs.AlternateAirport">
+            <summary>
+            The alternate airport. Three or four characters, upper case.
+            </summary>
+        </member>
+        <member name="P:RossCarlson.Vatsim.Vpilot.Plugins.Events.FlightPlanReceivedEventArgs.CruiseAltitude">
+            <summary>
+            The planned cruise altitude in feet.
+            </summary>
+        </member>
+        <member name="P:RossCarlson.Vatsim.Vpilot.Plugins.Events.FlightPlanReceivedEventArgs.CruiseSpeed">
+            <summary>
+            The planned cruise speed in knots.
+            </summary>
+        </member>
+        <member name="P:RossCarlson.Vatsim.Vpilot.Plugins.Events.FlightPlanReceivedEventArgs.Route">
+            <summary>
+            The flight plan route.
+            </summary>
+        </member>
+        <member name="P:RossCarlson.Vatsim.Vpilot.Plugins.Events.FlightPlanReceivedEventArgs.Remarks">
+            <summary>
+            The remarks.
+            </summary>
+        </member>
+        <member name="P:RossCarlson.Vatsim.Vpilot.Plugins.Events.FlightPlanReceivedEventArgs.Equipment">
+            <summary>
+            The filed equipment code optionally including a prefix and/or suffix.
+            </summary>
+        </member>
+        <member name="P:RossCarlson.Vatsim.Vpilot.Plugins.Events.FlightPlanReceivedEventArgs.DepartureTime">
+            <summary>
+            The departure time as HHMM zulu.
+            </summary>
+        </member>
+        <member name="P:RossCarlson.Vatsim.Vpilot.Plugins.Events.FlightPlanReceivedEventArgs.EnrouteHours">
+            <summary>
+            Estimated time enroute, hours portion.
+            </summary>
+        </member>
+        <member name="P:RossCarlson.Vatsim.Vpilot.Plugins.Events.FlightPlanReceivedEventArgs.EnrouteMinutes">
+            <summary>
+            Estimated time enroute, minutes portion.
+            </summary>
+        </member>
+        <member name="P:RossCarlson.Vatsim.Vpilot.Plugins.Events.FlightPlanReceivedEventArgs.FuelHours">
+            <summary>
+            Fuel on board, hours portion.
+            </summary>
+        </member>
+        <member name="P:RossCarlson.Vatsim.Vpilot.Plugins.Events.FlightPlanReceivedEventArgs.FuelMinutes">
+            <summary>
+            Fuel on board, minutes portion.
+            </summary>
+        </member>
+        <member name="P:RossCarlson.Vatsim.Vpilot.Plugins.Events.FlightPlanReceivedEventArgs.IsVfr">
+            <summary>
+            Set to true if this is a VFR flight plan.
+            </summary>
+        </member>
+        <member name="M:RossCarlson.Vatsim.Vpilot.Plugins.Events.FlightPlanReceivedEventArgs.#ctor(System.String,System.String,System.String,System.String,System.Int32,System.Int32,System.String,System.String,System.String,System.Int32,System.Int32,System.Int32,System.Int32,System.Int32,System.Boolean)">
+            <summary>
+            Initializes a new instance.
+            </summary>
+            <param name="callsign">The callsign.</param>
+            <param name="departureAirport">The departure airport. Three or four characters, upper case.</param>
+            <param name="destinationAirport">The destination airport. Three or four characters, upper case.</param>
+            <param name="alternateAirport">The alternate airport. Three or four characters, upper case.</param>
+            <param name="cruiseAltitude">The planned cruise altitude in feet.</param>
+            <param name="cruiseSpeed">The planned cruise speed in knots.</param>
+            <param name="route">The flight plan route.</param>
+            <param name="remarks">The remarks.</param>
+            <param name="equipment">The filed equipment code optionally including a prefix and/or suffix.</param>
+            <param name="departureTime">The departure time as HHMM zulu.</param>
+            <param name="enrouteHours">Estimated time enroute, hours portion.</param>
+            <param name="enrouteMinutes">Estimated time enroute, minutes portion.</param>
+            <param name="fuelHours">Fuel on board, hours portion.</param>
+            <param name="fuelMinutes">Fuel on board, minutes portion.</param>
+            <param name="isVfr">Set to true if this is a VFR flight plan.</param>
+        </member>
+        <member name="T:RossCarlson.Vatsim.Vpilot.Plugins.Exceptions.AlreadyConnectedException">
+            <summary>
+            The exception that is thrown when a connection request is made while vPilot is already connected to the network.
+            </summary>
+        </member>
+        <member name="M:RossCarlson.Vatsim.Vpilot.Plugins.Exceptions.AlreadyConnectedException.#ctor">
+            <summary>
+            Initializes a new instance.
+            </summary>
+        </member>
+        <member name="T:RossCarlson.Vatsim.Vpilot.Plugins.Exceptions.SimNotReadyException">
+            <summary>
+            The exception that is thrown when a request is made to connect to the network when vPilot does not have an active connection to the simulator.
+            </summary>
+        </member>
+        <member name="M:RossCarlson.Vatsim.Vpilot.Plugins.Exceptions.SimNotReadyException.#ctor">
+            <summary>
+            Initializes a new instance.
+            </summary>
+        </member>
+        <member name="T:RossCarlson.Vatsim.Vpilot.Plugins.Exceptions.NotTransmittingException">
+            <summary>
+            The exception that is thrown when neither COM radio is configured for transmit or the avionics power is off, and a request is made to transmit a radio message.
+            </summary>
+        </member>
+        <member name="M:RossCarlson.Vatsim.Vpilot.Plugins.Exceptions.NotTransmittingException.#ctor">
+            <summary>
+            Initializes a new instance.
+            </summary>
+        </member>
+        <member name="T:RossCarlson.Vatsim.Vpilot.Plugins.Exceptions.NotConnectedException">
+            <summary>
+            The exception that is thrown when vPilot is not connected to the network when a request is made which requires a connection.
+            </summary>
+        </member>
+        <member name="M:RossCarlson.Vatsim.Vpilot.Plugins.Exceptions.NotConnectedException.#ctor">
+            <summary>
+            Initializes a new instance.
+            </summary>
+        </member>
+        <member name="T:RossCarlson.Vatsim.Vpilot.Plugins.IBroker">
+            <summary>
+            The vPilot plugin broker interface.
+            </summary>
+        </member>
+        <member name="E:RossCarlson.Vatsim.Vpilot.Plugins.IBroker.SessionEnded">
+            <summary>
+            Raised when the vPilot window is about to close.
+            </summary>
+        </member>
+        <member name="E:RossCarlson.Vatsim.Vpilot.Plugins.IBroker.NetworkConnected">
+            <summary>
+            Raised when a connection to the VATSIM network has been established.
+            </summary>
+        </member>
+        <member name="E:RossCarlson.Vatsim.Vpilot.Plugins.IBroker.NetworkDisconnected">
+            <summary>
+            Raised when the VATSIM network connection has been closed.
+            </summary>
+        </member>
+        <member name="E:RossCarlson.Vatsim.Vpilot.Plugins.IBroker.PrivateMessageReceived">
+            <summary>
+            Raised when a private message arrives.
+            </summary>
+        </member>
+        <member name="E:RossCarlson.Vatsim.Vpilot.Plugins.IBroker.RadioMessageReceived">
+            <summary>
+            Raised when a text radio message arrives.
+            </summary>
+        </member>
+        <member name="E:RossCarlson.Vatsim.Vpilot.Plugins.IBroker.BroadcastMessageReceived">
+            <summary>
+            Raised when a broadcast message arrives.
+            </summary>
+        </member>
+        <member name="E:RossCarlson.Vatsim.Vpilot.Plugins.IBroker.MetarReceived">
+            <summary>
+            Raised when a METAR is received from the server.
+            </summary>
+        </member>
+        <member name="E:RossCarlson.Vatsim.Vpilot.Plugins.IBroker.AtisReceived">
+            <summary>
+            Raised when a text ATIS (a.k.a. 'controller info') is received.
+            </summary>
+        </member>
+        <member name="E:RossCarlson.Vatsim.Vpilot.Plugins.IBroker.FlightPlanReceived">
+            <summary>
+            Raised when the server responds to a request for the filed flight plan.
+            </summary>
+        </member>
+        <member name="E:RossCarlson.Vatsim.Vpilot.Plugins.IBroker.NoFlightPlanError">
+            <summary>
+            Raised when the server returns a "NoFlightPlan" error in response to a request for the filed flight plan.
+            </summary>
+        </member>
+        <member name="E:RossCarlson.Vatsim.Vpilot.Plugins.IBroker.ControllerAdded">
+            <summary>
+            Raised when a new controller is encountered.
+            </summary>
+        </member>
+        <member name="E:RossCarlson.Vatsim.Vpilot.Plugins.IBroker.ControllerDeleted">
+            <summary>
+            Raised when a controller is deleted.
+            </summary>
+        </member>
+        <member name="E:RossCarlson.Vatsim.Vpilot.Plugins.IBroker.ControllerFrequencyChanged">
+            <summary>
+            Raised when a controller changes to a new primary frequency.
+            </summary>
+        </member>
+        <member name="E:RossCarlson.Vatsim.Vpilot.Plugins.IBroker.ControllerLocationChanged">
+            <summary>
+            Raised when a controller moves to a new location.
+            </summary>
+        </member>
+        <member name="E:RossCarlson.Vatsim.Vpilot.Plugins.IBroker.SelcalAlertReceived">
+            <summary>
+            Raised when a SELCAL alert is received.
+            </summary>
+        </member>
+        <member name="E:RossCarlson.Vatsim.Vpilot.Plugins.IBroker.AircraftAdded">
+            <summary>
+            Raised when an aircraft is added to the simulator session.
+            </summary>
+        </member>
+        <member name="E:RossCarlson.Vatsim.Vpilot.Plugins.IBroker.AircraftUpdated">
+            <summary>
+            Raised when an aircraft is updated.
+            </summary>
+        </member>
+        <member name="E:RossCarlson.Vatsim.Vpilot.Plugins.IBroker.AircraftDeleted">
+            <summary>
+            Raised when an aircraft is deleted.
+            </summary>
+        </member>
+        <member name="M:RossCarlson.Vatsim.Vpilot.Plugins.IBroker.RequestConnect(System.String,System.String,System.String)">
+            <summary>
+            Request connection to the network.
+            </summary>
+            <param name="callsign">The callsign to use for the session. (Required)</param>
+            <param name="typeCode">The ICAO aircraft type code. (Required)</param>
+            <param name="selcalCode">The SELCAL code. (Optional; Leave empty or null for none.)</param>
+        </member>
+        <member name="M:RossCarlson.Vatsim.Vpilot.Plugins.IBroker.RequestDisconnect">
+            <summary>
+            Request disconnection from the network.
+            </summary>
+        </member>
+        <member name="M:RossCarlson.Vatsim.Vpilot.Plugins.IBroker.RequestMetar(System.String)">
+            <summary>
+            Request retrieval of METAR.
+            </summary>
+            <param name="station">The station (airport) for which to request the METAR.</param>
+        </member>
+        <member name="M:RossCarlson.Vatsim.Vpilot.Plugins.IBroker.RequestAtis(System.String)">
+            <summary>
+            Request controller ATIS information.
+            </summary>
+            <param name="callsign">The callsign of the controller.</param>
+        </member>
+        <member name="M:RossCarlson.Vatsim.Vpilot.Plugins.IBroker.SendPrivateMessage(System.String,System.String)">
+            <summary>
+            Send a private message.
+            </summary>
+            <param name="to">The recipient of the private message.</param>
+            <param name="message">The message contents.</param>
+        </member>
+        <member name="M:RossCarlson.Vatsim.Vpilot.Plugins.IBroker.SendRadioMessage(System.String)">
+            <summary>
+            Send a textual radio message. The message will be sent on the current transmit frequency or frequencies.
+            </summary>
+            <param name="message">The message contents.</param>
+        </member>
+        <member name="M:RossCarlson.Vatsim.Vpilot.Plugins.IBroker.FileFlightPlan(System.String,System.String,System.String,System.Int32,System.Int32,System.String,System.String,System.Boolean,System.String,System.Int32,System.Int32,System.Int32,System.Int32,System.Int32,System.Boolean)">
+            <summary>
+            File a flight plan.
+            </summary>
+            <param name="departureAirport">The departure airport. Three or four characters, upper case.</param>
+            <param name="destinationAirport">The destination airport. Three or four characters, upper case.</param>
+            <param name="alternateAirport">The alternate airport. Three or four characters, upper case.</param>
+            <param name="cruiseAltitude">The planned cruise altitude in feet.</param>
+            <param name="cruiseSpeed">The planned cruise speed in knots.</param>
+            <param name="route">The flight plan route.</param>
+            <param name="remarks">The remarks.</param>
+            <param name="isHeavy">Set to true if the aircraft is in the heavy wake turbulence class.</param>
+            <param name="equipmentSuffix">The equipment suffix as a single upper case letter.</param>
+            <param name="departureTime">The departure time as HHMM zulu.</param>
+            <param name="enrouteHours">Estimated time enroute, hours portion.</param>
+            <param name="enrouteMinutes">Estimated time enroute, minutes portion.</param>
+            <param name="fuelHours">Fuel on board, hours portion.</param>
+            <param name="fuelMinutes">Fuel on board, minutes portion.</param>
+            <param name="isVfr">Set to true if this is a VFR flight plan.</param>
+        </member>
+        <member name="M:RossCarlson.Vatsim.Vpilot.Plugins.IBroker.RequestFlightPlan">
+            <summary>
+            Request our flight plan.
+            </summary>
+        </member>
+        <member name="M:RossCarlson.Vatsim.Vpilot.Plugins.IBroker.PostDebugMessage(System.String)">
+            <summary>
+            Post a debug message.
+            </summary>
+            <param name="message">The message contents.</param>
+        </member>
+        <member name="M:RossCarlson.Vatsim.Vpilot.Plugins.IBroker.SetModeC(System.Boolean)">
+            <summary>
+            Set mode C on or off.
+            </summary>
+            <param name="modeC">Whether or not to squawk mode C.</param>
+        </member>
+        <member name="M:RossCarlson.Vatsim.Vpilot.Plugins.IBroker.SquawkIdent">
+            <summary>
+            Squawk ident.
+            </summary>
+        </member>
+        <member name="M:RossCarlson.Vatsim.Vpilot.Plugins.IBroker.SetPtt(System.Boolean)">
+            <summary>
+            Set Push-To-Talk on or off.
+            </summary>
+            <param name="pressed">Whether or not Push-To-Talk is pressed.</param>
+        </member>
+        <member name="T:RossCarlson.Vatsim.Vpilot.Plugins.IPlugin">
+            <summary>
+            The main vPilot plugin interface.
+            </summary>
+        </member>
+        <member name="P:RossCarlson.Vatsim.Vpilot.Plugins.IPlugin.Name">
+            <summary>
+            The name of your plugin.
+            </summary>
+        </member>
+        <member name="M:RossCarlson.Vatsim.Vpilot.Plugins.IPlugin.Initialize(RossCarlson.Vatsim.Vpilot.Plugins.IBroker)">
+            <summary>
+            Called by vPilot after the plugin is instantiated.
+            </summary>
+            <param name="broker">An IBroker instance.</param>
+        </member>
+    </members>
+</doc>
