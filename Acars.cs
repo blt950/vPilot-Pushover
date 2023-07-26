@@ -1,16 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Net.Http;
-using System.Text;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 using System.Timers;
 
-namespace vPilot_Pushover
-{
-    internal class Acars
-    {
+namespace vPilot_Pushover {
+    internal class Acars {
 
         public static List<Dictionary<string, string>> HoppieCache = new List<Dictionary<string, string>>();
         public static Boolean CacheLoaded = false;
@@ -19,8 +14,7 @@ namespace vPilot_Pushover
         public string _callsign;
         public string _logon;
 
-        public void init(Main main, String logon)
-        {
+        public void init( Main main, String logon ) {
             _main = main;
             _logon = logon;
 
@@ -33,62 +27,47 @@ namespace vPilot_Pushover
             FetchHoppie(null, null);
         }
 
-        public void SetCallsign(String callsign)
-        {
+        public void SetCallsign( String callsign ) {
             _callsign = callsign;
         }
 
-        async void FetchHoppie(object source, ElapsedEventArgs e)
-        {
+        async void FetchHoppie( object source, ElapsedEventArgs e ) {
             string baseUrl = "http://www.hoppie.nl/acars/system/connect.html";
             string logon = _logon;
             string from = _callsign;
             string type = "peek";
             string to = "SERVER";
 
-            if(_callsign != null)
-            {
-                using (HttpClient httpClient = new HttpClient())
-                {
+            if (_callsign != null) {
+                using (HttpClient httpClient = new HttpClient()) {
                     // Build the complete URL with GET variables
                     string fullUrl = $"{baseUrl}?logon={logon}&from={from}&type={type}&to={to}";
                     _main.SendDebug("[ACARS] Fetching Hoppie data");
 
-                    try
-                    {
+                    try {
                         HttpResponseMessage response = await httpClient.GetAsync(fullUrl);
-                        if (response.IsSuccessStatusCode)
-                        {
+                        if (response.IsSuccessStatusCode) {
                             string responseContent = await response.Content.ReadAsStringAsync();
                             ParseHoppie(responseContent);
-                        }
-                        else
-                        {
+                        } else {
                             _main.SendDebug($"[ACARS] HttpResponse request failed with status code: {response.StatusCode}");
                         }
-                    }
-                    catch (Exception ex)
-                    {
+                    } catch (Exception ex) {
                         _main.SendDebug($"[ACARS] An HttpResponse error occurred: {ex.Message}");
                     }
                 }
-            } 
-            else
-            {
+            } else {
                 _main.SendDebug($"[ACARS] FetchHoppie aborted due to missing callsign");
             }
 
         }
 
-        void ParseHoppie(String response)
-        {
+        void ParseHoppie( String response ) {
 
             Boolean statusOk = response.StartsWith("ok");
 
-            if (statusOk)
-            {
-                foreach (Match match in Regex.Matches(response, @"\{(\d+)\s(\w+)\s(\w+)\s\{([^\}]+)\}\}"))
-                {
+            if (statusOk) {
+                foreach (Match match in Regex.Matches(response, @"\{(\d+)\s(\w+)\s(\w+)\s\{([^\}]+)\}\}")) {
                     // Initate the Regex groups
                     string key = match.Groups[1].Value;
                     string from = match.Groups[2].Value;
@@ -100,8 +79,7 @@ namespace vPilot_Pushover
                     message = Regex.Replace(message, @"@", "");
 
                     // Check if key doesnt' exist, then add it
-                    if (!HoppieCache.Exists(x => x["key"] == key))
-                    {
+                    if (!HoppieCache.Exists(x => x["key"] == key)) {
                         // Create a dictionary for the current block and add the key-value pairs
                         Dictionary<string, string> dataDict = new Dictionary<string, string>
                         {
@@ -115,8 +93,7 @@ namespace vPilot_Pushover
                         HoppieCache.Add(dataDict);
 
                         // Send the message to Pushover
-                        if (CacheLoaded == true && message != "")
-                        {
+                        if (CacheLoaded == true && message != "") {
                             _main.SendPushover($"[{type.ToUpper()}] {from}: {message}");
                         }
                     }
@@ -126,9 +103,7 @@ namespace vPilot_Pushover
 
                 CacheLoaded = true;
 
-            }
-            else
-            {
+            } else {
                 _main.SendDebug("[ACARS] okCheck Error: " + response);
             }
 
