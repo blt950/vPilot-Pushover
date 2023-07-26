@@ -9,6 +9,8 @@ using RossCarlson.Vatsim.Vpilot.Plugins.Events;
 namespace vPilot_Pushover {
     public class Main : IPlugin {
 
+        public static string version = "0.0.1";
+
         // Init
         private IBroker vPilot;
         private Acars acars;
@@ -52,7 +54,7 @@ namespace vPilot_Pushover {
                 }
 
                 SendPushover("Connected");
-                SendDebug("vPilot Pushover connected and initilised!");
+                SendDebug($"vPilot Pushover connected and enabled on v.{version}");
 
             } else {
                 SendDebug("vPilot Pushover plugin failed to load. Check your vPilot-Pushover.ini");
