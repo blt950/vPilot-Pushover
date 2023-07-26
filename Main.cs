@@ -24,9 +24,10 @@ namespace vPilot_Pushover
         private Boolean SettingsLoaded = false;
         private IniFile SettingsFile;
 
-        private String settingPrivateEnabled = null;
-        private String settingRadioEnabled = null;
-        private String settingHoppieEnabled = null;
+        //@TODO: Cast the booleans dammit
+        private Boolean settingPrivateEnabled = false;
+        private Boolean settingRadioEnabled = false;
+        private Boolean settingHoppieEnabled = false;
         private String settingHoppieLogon = null;
         private String settingPushoverToken = null;
         private String settingPushoverUser = null;
@@ -36,24 +37,15 @@ namespace vPilot_Pushover
             _broker = broker;
             LoadSettings();
 
-            SendDebug($"PushoverToken: {SettingsFile.Read("ApiKey", "Pushover")}");
-            SendDebug($"PushoverUser: {SettingsFile.Read("UserKey", "Pushover")}");
-
-            SendDebug($"HoppieEnabled: {SettingsFile.Read("Enabled", "Hoppie")}");
-            SendDebug($"HoppieLogon: {SettingsFile.Read("LogonCode", "Hoppie")}");
-
-            SendDebug($"PrivateEnabled: {SettingsFile.Read("Enabled", "RelayPrivate")}");
-            SendDebug($"RadioEnabled: {SettingsFile.Read("Enabled", "RelayRadio")}");
-
             if (SettingsLoaded)
             {
                 // Subscribe to events according to settings
                 _broker.NetworkConnected += OnNetworkConnectedHandler;
-                if (settingPrivateEnabled == "1") _broker.PrivateMessageReceived += OnPrivateMessageReceivedHandler;
-                if (settingRadioEnabled == "1") _broker.RadioMessageReceived += OnRadioMessageReceivedHandler;
+                if (settingPrivateEnabled) _broker.PrivateMessageReceived += OnPrivateMessageReceivedHandler;
+                if (settingRadioEnabled) _broker.RadioMessageReceived += OnRadioMessageReceivedHandler;
 
                 // Enable ACARS if Hoppie is enabled
-                if (settingHoppieEnabled == "1")
+                if (settingHoppieEnabled)
                 {
                     acars = new Acars();
                     acars.init(this, settingHoppieLogon);
@@ -131,10 +123,10 @@ namespace vPilot_Pushover
                 // Set all values
                 settingPushoverToken = SettingsFile.Read("ApiKey", "Pushover");
                 settingPushoverUser = SettingsFile.Read("UserKey", "Pushover");
-                settingHoppieEnabled = SettingsFile.Read("Enabled", "Hoppie");
+                settingHoppieEnabled = Boolean.Parse(SettingsFile.Read("Enabled", "Hoppie"));
                 settingHoppieLogon = SettingsFile.Read("LogonCode", "Hoppie");
-                settingPrivateEnabled = SettingsFile.Read("Enabled", "RelayPrivate");
-                settingRadioEnabled = SettingsFile.Read("Enabled", "RelayRadio");
+                settingPrivateEnabled = Boolean.Parse(SettingsFile.Read("Enabled", "RelayPrivate"));
+                settingRadioEnabled = Boolean.Parse(SettingsFile.Read("Enabled", "RelayRadio"));
 
                 // Validate values
                 if (settingPushoverToken == null || settingPushoverUser == null)
@@ -142,7 +134,7 @@ namespace vPilot_Pushover
                     SendDebug("Pushover API key or user key not set. Check your vPilot-Pushover.ini");
                 }
 
-                if (settingHoppieEnabled == "1" && settingHoppieLogon == null)
+                if (settingHoppieEnabled && settingHoppieLogon == null)
                 {
                     SendDebug("Hoppie logon code not set. Check your vPilot-Pushover.ini");
                 }
