@@ -35,6 +35,7 @@ namespace vPilot_Pushover {
         public void start() {
             hoppieTimer.Enabled = true;
             Plugin.SendDebug("[ACARS] Starting ACARS");
+            fetchHoppie(null, null);
         }
 
         /*
@@ -125,7 +126,7 @@ namespace vPilot_Pushover {
                             Plugin.SendPushover($"[{type.ToUpper()}] {from}: {message}");
                         }
 
-                        Plugin.SendDebug($"Received message with key {key} with msg: {message}");
+                        Plugin.SendDebug($"[ACARS] Cached {key} with message: {message}");
 
                     }
 
