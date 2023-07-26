@@ -6,36 +6,44 @@ using Microsoft.Win32;
 using RossCarlson.Vatsim.Vpilot.Plugins;
 using RossCarlson.Vatsim.Vpilot.Plugins.Events;
 
-
 namespace vPilot_Pushover {
     public class Main : IPlugin {
-        private IBroker _broker;
-        private static readonly HttpClient client = new HttpClient();
-        public string Name => "vPilot Pushover";
-        public string connectedCallsign = null;
+
+        // Init
+        private IBroker vPilot;
         private Acars acars;
+        private static readonly HttpClient client = new HttpClient();
+
+        public string Name { get; } = "vPilot Pushover";
+
+        // Public variables
+        public string connectedCallsign = null;
 
         // Settings
-        private Boolean SettingsLoaded = false;
-        private IniFile SettingsFile;
+        private Boolean settingsLoaded = false;
+        private IniFile settingsFile;
 
-        //@TODO: Cast the booleans dammit
         private Boolean settingPrivateEnabled = false;
         private Boolean settingRadioEnabled = false;
         private Boolean settingHoppieEnabled = false;
-        private String settingHoppieLogon = null;
+        public String settingHoppieLogon = null;
         private String settingPushoverToken = null;
         private String settingPushoverUser = null;
 
+        /*
+         * 
+         * Initilise the plugin
+         *
+        */
         public void Initialize( IBroker broker ) {
-            _broker = broker;
+            vPilot = broker;
             LoadSettings();
 
-            if (SettingsLoaded) {
+            if (settingsLoaded) {
                 // Subscribe to events according to settings
-                _broker.NetworkConnected += OnNetworkConnectedHandler;
-                if (settingPrivateEnabled) _broker.PrivateMessageReceived += OnPrivateMessageReceivedHandler;
-                if (settingRadioEnabled) _broker.RadioMessageReceived += OnRadioMessageReceivedHandler;
+                vPilot.NetworkConnected += OnNetworkConnectedHandler;
+                if (settingPrivateEnabled) vPilot.PrivateMessageReceived += OnPrivateMessageReceivedHandler;
+                if (settingRadioEnabled) vPilot.RadioMessageReceived += OnRadioMessageReceivedHandler;
 
                 // Enable ACARS if Hoppie is enabled
                 if (settingHoppieEnabled) {
@@ -44,7 +52,7 @@ namespace vPilot_Pushover {
                 }
 
                 SendPushover("Connected");
-                SendDebug("Connected");
+                SendDebug("vPilot Pushover connected and initilised!");
 
             } else {
                 SendDebug("vPilot Pushover plugin failed to load. Check your vPilot-Pushover.ini");
@@ -52,10 +60,20 @@ namespace vPilot_Pushover {
 
         }
 
+        /*
+         * 
+         * Send debug message to vPilot
+         *
+        */
         public void SendDebug( String text ) {
-            _broker.PostDebugMessage(text);
+            vPilot.PostDebugMessage(text);
         }
 
+        /*
+         * 
+         * Send Pushover message
+         *
+        */
         public async void SendPushover( String text ) {
 
             var values = new Dictionary<string, string>
@@ -68,16 +86,25 @@ namespace vPilot_Pushover {
             var response = await client.PostAsync("https://api.pushover.net/1/messages.json", new FormUrlEncodedContent(values));
 
             var responseString = await response.Content.ReadAsStringAsync();
-            _broker.PostDebugMessage(responseString);
+            vPilot.PostDebugMessage(responseString);
 
         }
 
+        /*
+         * 
+         * Hook: Network connected
+         *
+        */
         private void OnNetworkConnectedHandler( object sender, NetworkConnectedEventArgs e ) {
             connectedCallsign = e.Callsign;
-            acars.SetCallsign(e.Callsign);
-            _broker.PostDebugMessage($"VATSIM connected with callsign: {e.Callsign}");
+            vPilot.PostDebugMessage($"VATSIM connected with callsign: {e.Callsign}");
         }
 
+        /*
+         * 
+         * Hook: Private Message
+         *
+        */
         private void OnPrivateMessageReceivedHandler( object sender, PrivateMessageReceivedEventArgs e ) {
             string from = e.From;
             string message = e.Message;
@@ -85,6 +112,11 @@ namespace vPilot_Pushover {
             SendPushover($"{from}: {message}");
         }
 
+        /*
+         * 
+         * Hook: Radio Message
+         *
+        */
         private void OnRadioMessageReceivedHandler( object sender, RadioMessageReceivedEventArgs e ) {
             string from = e.From;
             string message = e.Message;
@@ -95,21 +127,26 @@ namespace vPilot_Pushover {
 
         }
 
+        /*
+         * 
+         * Load plugin settings
+         *
+        */
         private void LoadSettings() {
 
             RegistryKey registryKey = Registry.CurrentUser.OpenSubKey("Software\\vPilot");
             if (registryKey != null) {
                 string vPilotPath = (string)registryKey.GetValue("Install_Dir");
                 string configFile = vPilotPath + "\\Plugins\\vPilot-Pushover.ini";
-                SettingsFile = new IniFile(configFile);
+                settingsFile = new IniFile(configFile);
 
                 // Set all values
-                settingPushoverToken = SettingsFile.Read("ApiKey", "Pushover");
-                settingPushoverUser = SettingsFile.Read("UserKey", "Pushover");
-                settingHoppieEnabled = Boolean.Parse(SettingsFile.Read("Enabled", "Hoppie"));
-                settingHoppieLogon = SettingsFile.Read("LogonCode", "Hoppie");
-                settingPrivateEnabled = Boolean.Parse(SettingsFile.Read("Enabled", "RelayPrivate"));
-                settingRadioEnabled = Boolean.Parse(SettingsFile.Read("Enabled", "RelayRadio"));
+                settingPushoverToken = settingsFile.Read("ApiKey", "Pushover");
+                settingPushoverUser = settingsFile.Read("UserKey", "Pushover");
+                settingHoppieEnabled = Boolean.Parse(settingsFile.Read("Enabled", "Hoppie"));
+                settingHoppieLogon = settingsFile.Read("LogonCode", "Hoppie");
+                settingPrivateEnabled = Boolean.Parse(settingsFile.Read("Enabled", "RelayPrivate"));
+                settingRadioEnabled = Boolean.Parse(settingsFile.Read("Enabled", "RelayRadio"));
 
                 // Validate values
                 if (settingPushoverToken == null || settingPushoverUser == null) {
@@ -121,14 +158,14 @@ namespace vPilot_Pushover {
                 }
 
                 // Debug print
-                SendDebug($"PushoverToken: {SettingsFile.Read("ApiKey", "Pushover")}");
-                SendDebug($"PushoverUser: {SettingsFile.Read("UserKey", "Pushover")}");
-                SendDebug($"HoppieEnabled: {SettingsFile.Read("Enabled", "Hoppie")}");
-                SendDebug($"HoppieLogon: {SettingsFile.Read("LogonCode", "Hoppie")}");
-                SendDebug($"PrivateEnabled: {SettingsFile.Read("Enabled", "RelayPrivate")}");
-                SendDebug($"RadioEnabled: {SettingsFile.Read("Enabled", "RelayRadio")}");
+                SendDebug($"PushoverToken: {settingsFile.Read("ApiKey", "Pushover")}");
+                SendDebug($"PushoverUser: {settingsFile.Read("UserKey", "Pushover")}");
+                SendDebug($"HoppieEnabled: {settingsFile.Read("Enabled", "Hoppie")}");
+                SendDebug($"HoppieLogon: {settingsFile.Read("LogonCode", "Hoppie")}");
+                SendDebug($"PrivateEnabled: {settingsFile.Read("Enabled", "RelayPrivate")}");
+                SendDebug($"RadioEnabled: {settingsFile.Read("Enabled", "RelayRadio")}");
 
-                SettingsLoaded = true;
+                settingsLoaded = true;
 
             } else {
                 SendDebug("Registry key not found. Is vPilot installed correctly?");
