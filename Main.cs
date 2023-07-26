@@ -44,6 +44,7 @@ namespace vPilot_Pushover {
             if (settingsLoaded) {
                 // Subscribe to events according to settings
                 vPilot.NetworkConnected += OnNetworkConnectedHandler;
+                vPilot.NetworkDisconnected += OnNetworkDisconnectedHandler;
                 if (settingPrivateEnabled) vPilot.PrivateMessageReceived += OnPrivateMessageReceivedHandler;
                 if (settingRadioEnabled) vPilot.RadioMessageReceived += OnRadioMessageReceivedHandler;
 
@@ -97,6 +98,23 @@ namespace vPilot_Pushover {
         */
         private void OnNetworkConnectedHandler( object sender, NetworkConnectedEventArgs e ) {
             connectedCallsign = e.Callsign;
+
+            if (settingHoppieEnabled) {
+                acars.start();
+            }
+        }
+
+        /*
+         * 
+         * Hook: Network disconnected
+         *
+        */
+        private void OnNetworkDisconnectedHandler( object sender, EventArgs e ) {
+            connectedCallsign = null;
+
+            if (settingHoppieEnabled) {
+                acars.stop();
+            }
         }
 
         /*

@@ -12,6 +12,8 @@ namespace vPilot_Pushover {
         private static List<Dictionary<string, string>> hoppieCache = new List<Dictionary<string, string>>();
         private static Boolean cacheLoaded = false;
 
+        private readonly Timer hoppieTimer = new Timer();
+
         /*
          * 
          * Initilise the ACARS
@@ -20,13 +22,29 @@ namespace vPilot_Pushover {
         public void init( Main main, String logon ) {
             Plugin = main;
 
-            Timer hoppieTimer = new Timer();
             hoppieTimer.Elapsed += new ElapsedEventHandler(fetchHoppie);
             hoppieTimer.Interval = 45 * 1000;
-            hoppieTimer.Enabled = true;
 
-            // Run it manually once
-            fetchHoppie(null, null);
+        }
+
+        /*
+         * 
+         * Start the ACARS
+         *
+        */
+        public void start() {
+            hoppieTimer.Enabled = true;
+            Plugin.SendDebug("[ACARS] Starting ACARS");
+        }
+
+        /*
+         * 
+         * Stop the ACARS
+         *
+        */
+        public void stop() {
+            hoppieTimer.Enabled = false;
+            Plugin.SendDebug("[ACARS] Stopping ACARS");
         }
 
         /*
@@ -46,7 +64,7 @@ namespace vPilot_Pushover {
 
                     // Build the complete URL with GET variables
                     string fullUrl = $"{baseUrl}?logon={logon}&from={from}&type={type}&to={to}";
-                    Plugin.SendDebug("[ACARS] Fetching Hoppie data");
+                    Plugin.SendDebug($"[ACARS] Fetching Hoppie data with callsign {from}");
 
                     try {
                         HttpResponseMessage response = await httpClient.GetAsync(fullUrl);
@@ -106,6 +124,9 @@ namespace vPilot_Pushover {
                         if (cacheLoaded == true && message != "") {
                             Plugin.SendPushover($"[{type.ToUpper()}] {from}: {message}");
                         }
+
+                        Plugin.SendDebug($"Received message with key {key} with msg: {message}");
+
                     }
 
 
