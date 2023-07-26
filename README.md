@@ -3,7 +3,7 @@ Relay vPilot and Hoppie messages to your phone or tablet via [Pushover](https://
 ![Image of example notification of contact me](https://github.com/blt950/vPilot-Pushover/assets/2505044/d6d0b5de-3fd5-4d83-a244-4f66dec99961)
 
 ## Installation
-1. Download the latest release from the [releases page](https://github.com/blt950/vPilot-Pushover/releases)
+1. Download the latest release `.zip` only from the [releases page](https://github.com/blt950/vPilot-Pushover/releases)
 2. Extract the zip file and move both `vPilot-Pushover.dll` and `vPilot-Pushover.ini` to your vPilot plugin folder, usually `C:\Users\<your username>\AppData\Local\vPilot\Plugins`
 3. Open `vPilot-Pushover.ini` in a text editor and configure your desired settings
 
