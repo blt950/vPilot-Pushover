@@ -84,9 +84,7 @@ namespace vPilot_Pushover {
             };
 
             var response = await client.PostAsync("https://api.pushover.net/1/messages.json", new FormUrlEncodedContent(values));
-
             var responseString = await response.Content.ReadAsStringAsync();
-            vPilot.PostDebugMessage(responseString);
 
         }
 
@@ -97,7 +95,6 @@ namespace vPilot_Pushover {
         */
         private void OnNetworkConnectedHandler( object sender, NetworkConnectedEventArgs e ) {
             connectedCallsign = e.Callsign;
-            vPilot.PostDebugMessage($"VATSIM connected with callsign: {e.Callsign}");
         }
 
         /*
