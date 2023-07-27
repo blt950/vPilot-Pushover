@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Net.Http;
+using System.Threading.Tasks;
 using Microsoft.Win32;
 
 using RossCarlson.Vatsim.Vpilot.Plugins;
@@ -9,7 +10,7 @@ using RossCarlson.Vatsim.Vpilot.Plugins.Events;
 namespace vPilot_Pushover {
     public class Main : IPlugin {
 
-        public static string version = "0.0.1";
+        public static string version = "0.0.2";
 
         // Init
         private IBroker vPilot;
@@ -54,8 +55,10 @@ namespace vPilot_Pushover {
                     acars.init(this, settingHoppieLogon);
                 }
 
-                SendPushover("Connected");
-                SendDebug($"vPilot Pushover connected and enabled on v.{version}");
+                SendPushover($"Connected. Running version v{version}");
+                SendDebug($"vPilot Pushover connected and enabled on v{version}");
+
+                updateChecker();
 
             } else {
                 SendDebug("vPilot Pushover plugin failed to load. Check your vPilot-Pushover.ini");
@@ -191,6 +194,34 @@ namespace vPilot_Pushover {
             }
 
         }
+
+        /*
+         * 
+         * Check if is update available
+         *
+        */
+        private async void updateChecker() {
+
+            using (HttpClient httpClient = new HttpClient()) {
+                try {
+                    HttpResponseMessage response = await httpClient.GetAsync("https://raw.githubusercontent.com/blt950/vPilot-Pushover/main/version.txt");
+                    if (response.IsSuccessStatusCode) {
+                        string responseContent = await response.Content.ReadAsStringAsync();
+                        if (responseContent != ("v"+version)) {
+                            await Task.Delay(5000);
+                            SendDebug($"Update available. Latest version is {responseContent}");
+                            SendPushover($"Update available. Latest version is {responseContent}. Download newest version at https://blt950.com", "vPilot Pushover Plugin");
+                        }
+                    } else {
+                        SendDebug($"[Update Checker] HttpResponse request failed with status code: {response.StatusCode}");
+                    }
+                } catch (Exception ex) {
+                    SendDebug($"[Update Checker] An HttpResponse error occurred: {ex.Message}");
+                }
+            }
+
+        }
+
 
     }
 }
