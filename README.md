@@ -1,6 +1,7 @@
 # vPilot Pushover
 Relay vPilot and Hoppie messages to your phone or tablet via [Pushover](https://pushover.net/). Requires [vPilot](https://vpilot.rosscarlson.dev/).
-![Image of example notification of contact me](https://github.com/blt950/vPilot-Pushover/assets/2505044/9d18ed9d-2a9f-4044-af08-47d6ae33ede3)
+![Image of example notification of contact me](https://github.com/blt950/vPilot-Pushover/assets/2505044/1d1c3ff5-0598-48c5-9723-5a1a696b5b1d)
+
 
 ## Installation
 
