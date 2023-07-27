@@ -123,7 +123,7 @@ namespace vPilot_Pushover {
 
                         // Send the message to Pushover
                         if (cacheLoaded == true && message != "") {
-                            Plugin.SendPushover($"[{type.ToUpper()}] {from}: {message}");
+                            Plugin.SendPushover(message, $"{from} ({type.ToUpper()})");
                         }
 
                         Plugin.SendDebug($"[ACARS] Cached {key} with message: {message}");

@@ -77,13 +77,15 @@ namespace vPilot_Pushover {
          * Send Pushover message
          *
         */
-        public async void SendPushover( String text ) {
+        public async void SendPushover( String text, String title = "", int priority = 0 ) {
 
             var values = new Dictionary<string, string>
             {
                 { "token", settingPushoverToken },
                 { "user", settingPushoverUser },
-                { "message", text }
+                { "title",  title },
+                { "message", text },
+                { "priority", priority.ToString() }
             };
 
             var response = await client.PostAsync("https://api.pushover.net/1/messages.json", new FormUrlEncodedContent(values));
@@ -126,7 +128,7 @@ namespace vPilot_Pushover {
             string from = e.From;
             string message = e.Message;
 
-            SendPushover($"{from}: {message}");
+            SendPushover(message, from, 1);
         }
 
         /*
@@ -139,7 +141,7 @@ namespace vPilot_Pushover {
             string message = e.Message;
 
             if (message.Contains(connectedCallsign)) {
-                SendPushover($"{from}: {message}");
+                SendPushover(message, from, 1);
             }
 
         }
