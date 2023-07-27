@@ -25,3 +25,7 @@ In the `vPilot-Pushover.ini` file, you can configure the following settings:
 
 ### [RelayRadio]
 `Enabled` = Whether or not to relay radio messages to Pushover. Only sends radio messages meant for your callsign, e.g. ATC writing to you on text. Set to `true` or `false`
+
+## Contribution
+
+Feel free to contribute by creating pull requests or issues!
