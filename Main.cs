@@ -178,20 +178,24 @@ namespace vPilot_Pushover {
                 settingsFile = new IniFile(configFile);
 
                 // Set all values
-                settingPushoverToken = settingsFile.Read("ApiKey", "Pushover");
-                settingPushoverUser = settingsFile.Read("UserKey", "Pushover");
-                settingHoppieEnabled = Boolean.Parse(settingsFile.Read("Enabled", "Hoppie"));
-                settingHoppieLogon = settingsFile.Read("LogonCode", "Hoppie");
-                settingPrivateEnabled = Boolean.Parse(settingsFile.Read("Enabled", "RelayPrivate"));
-                settingRadioEnabled = Boolean.Parse(settingsFile.Read("Enabled", "RelayRadio"));
+                settingPushoverToken = settingsFile.KeyExists("ApiKey", "Pushover") ? settingsFile.Read("ApiKey", "Pushover") : null;
+                settingPushoverUser = settingsFile.KeyExists("UserKey", "Pushover") ? settingsFile.Read("UserKey", "Pushover") : null;
+                settingPushoverDevice = settingsFile.KeyExists("Device", "Pushover") ? settingsFile.Read("Device", "Pushover") : null;
+                settingHoppieEnabled = settingsFile.KeyExists("Enabled", "Hoppie") ? Boolean.Parse(settingsFile.Read("Enabled", "Hoppie")) : false;
+                settingHoppieLogon = settingsFile.KeyExists("LogonCode", "Hoppie") ? settingsFile.Read("LogonCode", "Hoppie") : null;
+                settingPrivateEnabled = settingsFile.KeyExists("Enabled", "RelayPrivate") ? Boolean.Parse(settingsFile.Read("Enabled", "RelayPrivate")) : false;
+                settingRadioEnabled = settingsFile.KeyExists("Enabled", "RelayRadio") ? Boolean.Parse(settingsFile.Read("Enabled", "RelayRadio")) : false;
+                settingSelcalEnabled = settingsFile.KeyExists("Enabled", "RelaySelcal") ? Boolean.Parse(settingsFile.Read("Enabled", "RelaySelcal")) : false;
 
                 // Validate values
                 if (settingPushoverToken == null || settingPushoverUser == null) {
                     SendDebug("Pushover API key or user key not set. Check your vPilot-Pushover.ini");
+                    return;
                 }
 
                 if (settingHoppieEnabled && settingHoppieLogon == null) {
                     SendDebug("Hoppie logon code not set. Check your vPilot-Pushover.ini");
+                    SendPushover("Hoppie logon code not set. Check your vPilot-Pushover.ini");
                 }
 
                 // Debug print
