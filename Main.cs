@@ -198,14 +198,6 @@ namespace vPilot_Pushover {
                     SendPushover("Hoppie logon code not set. Check your vPilot-Pushover.ini");
                 }
 
-                // Debug print
-                SendDebug($"PushoverToken: {settingsFile.Read("ApiKey", "Pushover")}");
-                SendDebug($"PushoverUser: {settingsFile.Read("UserKey", "Pushover")}");
-                SendDebug($"HoppieEnabled: {settingsFile.Read("Enabled", "Hoppie")}");
-                SendDebug($"HoppieLogon: {settingsFile.Read("LogonCode", "Hoppie")}");
-                SendDebug($"PrivateEnabled: {settingsFile.Read("Enabled", "RelayPrivate")}");
-                SendDebug($"RadioEnabled: {settingsFile.Read("Enabled", "RelayRadio")}");
-
                 settingsLoaded = true;
 
             } else {
