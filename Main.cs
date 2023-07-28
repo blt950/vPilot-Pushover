@@ -42,15 +42,15 @@ namespace vPilot_Pushover {
         */
         public void Initialize( IBroker broker ) {
             vPilot = broker;
-            LoadSettings();
+            loadSettings();
 
             if (settingsLoaded) {
                 // Subscribe to events according to settings
-                vPilot.NetworkConnected += OnNetworkConnectedHandler;
-                vPilot.NetworkDisconnected += OnNetworkDisconnectedHandler;
-                if (settingPrivateEnabled) vPilot.PrivateMessageReceived += OnPrivateMessageReceivedHandler;
-                if (settingRadioEnabled) vPilot.RadioMessageReceived += OnRadioMessageReceivedHandler;
-                if (settingSelcalEnabled) vPilot.SelcalAlertReceived += OnSelcalAlertReceivedHandler;
+                vPilot.NetworkConnected += onNetworkConnectedHandler;
+                vPilot.NetworkDisconnected += onNetworkDisconnectedHandler;
+                if (settingPrivateEnabled) vPilot.PrivateMessageReceived += onPrivateMessageReceivedHandler;
+                if (settingRadioEnabled) vPilot.RadioMessageReceived += onRadioMessageReceivedHandler;
+                if (settingSelcalEnabled) vPilot.SelcalAlertReceived += onSelcalAlertReceivedHandler;
 
                 // Enable ACARS if Hoppie is enabled
                 if (settingHoppieEnabled) {
@@ -58,13 +58,13 @@ namespace vPilot_Pushover {
                     acars.init(this, settingHoppieLogon);
                 }
 
-                SendPushover($"Connected. Running version v{version}");
-                SendDebug($"vPilot Pushover connected and enabled on v{version}");
+                sendPushover($"Connected. Running version v{version}");
+                sendDebug($"vPilot Pushover connected and enabled on v{version}");
 
                 updateChecker();
 
             } else {
-                SendDebug("vPilot Pushover plugin failed to load. Check your vPilot-Pushover.ini");
+                sendDebug("vPilot Pushover plugin failed to load. Check your vPilot-Pushover.ini");
             }
 
         }
@@ -74,7 +74,7 @@ namespace vPilot_Pushover {
          * Send debug message to vPilot
          *
         */
-        public void SendDebug( String text ) {
+        public void sendDebug( String text ) {
             vPilot.PostDebugMessage(text);
         }
 
@@ -83,7 +83,7 @@ namespace vPilot_Pushover {
          * Send Pushover message
          *
         */
-        public async void SendPushover( String text, String title = "", int priority = 0 ) {
+        public async void sendPushover( String text, String title = "", int priority = 0 ) {
 
             var values = new Dictionary<string, string>
             {
@@ -105,7 +105,7 @@ namespace vPilot_Pushover {
          * Hook: Network connected
          *
         */
-        private void OnNetworkConnectedHandler( object sender, NetworkConnectedEventArgs e ) {
+        private void onNetworkConnectedHandler( object sender, NetworkConnectedEventArgs e ) {
             connectedCallsign = e.Callsign;
 
             if (settingHoppieEnabled) {
@@ -118,7 +118,7 @@ namespace vPilot_Pushover {
          * Hook: Network disconnected
          *
         */
-        private void OnNetworkDisconnectedHandler( object sender, EventArgs e ) {
+        private void onNetworkDisconnectedHandler( object sender, EventArgs e ) {
             connectedCallsign = null;
 
             if (settingHoppieEnabled) {
@@ -131,11 +131,11 @@ namespace vPilot_Pushover {
          * Hook: Private Message
          *
         */
-        private void OnPrivateMessageReceivedHandler( object sender, PrivateMessageReceivedEventArgs e ) {
+        private void onPrivateMessageReceivedHandler( object sender, PrivateMessageReceivedEventArgs e ) {
             string from = e.From;
             string message = e.Message;
 
-            SendPushover(message, from, 1);
+            sendPushover(message, from, 1);
         }
 
         /*
@@ -143,12 +143,12 @@ namespace vPilot_Pushover {
          * Hook: Radio Message
          *
         */
-        private void OnRadioMessageReceivedHandler( object sender, RadioMessageReceivedEventArgs e ) {
+        private void onRadioMessageReceivedHandler( object sender, RadioMessageReceivedEventArgs e ) {
             string from = e.From;
             string message = e.Message;
 
             if (message.Contains(connectedCallsign)) {
-                SendPushover(message, from, 1);
+                sendPushover(message, from, 1);
             }
 
         }
@@ -158,9 +158,9 @@ namespace vPilot_Pushover {
          * Hook: SELCAL Message
          *
         */
-        private void OnSelcalAlertReceivedHandler( object sender, SelcalAlertReceivedEventArgs e ) {
+        private void onSelcalAlertReceivedHandler( object sender, SelcalAlertReceivedEventArgs e ) {
             string from = e.From;
-            SendPushover("SELCAL Alert", from, 1);
+            sendPushover("SELCAL Alert", from, 1);
         }
         
 
@@ -169,7 +169,7 @@ namespace vPilot_Pushover {
          * Load plugin settings
          *
         */
-        private void LoadSettings() {
+        private void loadSettings() {
 
             RegistryKey registryKey = Registry.CurrentUser.OpenSubKey("Software\\vPilot");
             if (registryKey != null) {
@@ -189,19 +189,19 @@ namespace vPilot_Pushover {
 
                 // Validate values
                 if (settingPushoverToken == null || settingPushoverUser == null) {
-                    SendDebug("Pushover API key or user key not set. Check your vPilot-Pushover.ini");
+                    sendDebug("Pushover API key or user key not set. Check your vPilot-Pushover.ini");
                     return;
                 }
 
                 if (settingHoppieEnabled && settingHoppieLogon == null) {
-                    SendDebug("Hoppie logon code not set. Check your vPilot-Pushover.ini");
-                    SendPushover("Hoppie logon code not set. Check your vPilot-Pushover.ini");
+                    sendDebug("Hoppie logon code not set. Check your vPilot-Pushover.ini");
+                    sendPushover("Hoppie logon code not set. Check your vPilot-Pushover.ini");
                 }
 
                 settingsLoaded = true;
 
             } else {
-                SendDebug("Registry key not found. Is vPilot installed correctly?");
+                sendDebug("Registry key not found. Is vPilot installed correctly?");
             }
 
         }
@@ -220,14 +220,14 @@ namespace vPilot_Pushover {
                         string responseContent = await response.Content.ReadAsStringAsync();
                         if (responseContent != (version)) {
                             await Task.Delay(5000);
-                            SendDebug($"Update available. Latest version is v{responseContent}");
-                            SendPushover($"Update available. Latest version is v{responseContent}. Download newest version at https://blt950.com", "vPilot Pushover Plugin");
+                            sendDebug($"Update available. Latest version is v{responseContent}");
+                            sendPushover($"Update available. Latest version is v{responseContent}. Download newest version at https://blt950.com", "vPilot Pushover Plugin");
                         }
                     } else {
-                        SendDebug($"[Update Checker] HttpResponse request failed with status code: {response.StatusCode}");
+                        sendDebug($"[Update Checker] HttpResponse request failed with status code: {response.StatusCode}");
                     }
                 } catch (Exception ex) {
-                    SendDebug($"[Update Checker] An HttpResponse error occurred: {ex.Message}");
+                    sendDebug($"[Update Checker] An HttpResponse error occurred: {ex.Message}");
                 }
             }
 

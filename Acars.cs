@@ -34,7 +34,7 @@ namespace vPilot_Pushover {
         */
         public void start() {
             hoppieTimer.Enabled = true;
-            Plugin.SendDebug("[ACARS] Starting ACARS");
+            Plugin.sendDebug("[ACARS] Starting ACARS");
             fetchHoppie(null, null);
         }
 
@@ -45,7 +45,7 @@ namespace vPilot_Pushover {
         */
         public void stop() {
             hoppieTimer.Enabled = false;
-            Plugin.SendDebug("[ACARS] Stopping ACARS");
+            Plugin.sendDebug("[ACARS] Stopping ACARS");
         }
 
         /*
@@ -65,7 +65,7 @@ namespace vPilot_Pushover {
 
                     // Build the complete URL with GET variables
                     string fullUrl = $"{baseUrl}?logon={logon}&from={from}&type={type}&to={to}";
-                    Plugin.SendDebug($"[ACARS] Fetching Hoppie data with callsign {from}");
+                    Plugin.sendDebug($"[ACARS] Fetching Hoppie data with callsign {from}");
 
                     try {
                         HttpResponseMessage response = await httpClient.GetAsync(fullUrl);
@@ -73,15 +73,15 @@ namespace vPilot_Pushover {
                             string responseContent = await response.Content.ReadAsStringAsync();
                             parseHoppie(responseContent);
                         } else {
-                            Plugin.SendDebug($"[ACARS] HttpResponse request failed with status code: {response.StatusCode}");
+                            Plugin.sendDebug($"[ACARS] HttpResponse request failed with status code: {response.StatusCode}");
                         }
                     } catch (Exception ex) {
-                        Plugin.SendDebug($"[ACARS] An HttpResponse error occurred: {ex.Message}");
+                        Plugin.sendDebug($"[ACARS] An HttpResponse error occurred: {ex.Message}");
                     }
 
                 }
             } else {
-                Plugin.SendDebug($"[ACARS] fetchHoppie aborted due to missing callsign");
+                Plugin.sendDebug($"[ACARS] fetchHoppie aborted due to missing callsign");
             }
 
         }
@@ -123,10 +123,10 @@ namespace vPilot_Pushover {
 
                         // Send the message to Pushover
                         if (cacheLoaded == true && message != "") {
-                            Plugin.SendPushover(message, $"{from} ({type.ToUpper()})");
+                            Plugin.sendPushover(message, $"{from} ({type.ToUpper()})");
                         }
 
-                        Plugin.SendDebug($"[ACARS] Cached {key} with message: {message}");
+                        Plugin.sendDebug($"[ACARS] Cached {key} with message: {message}");
 
                     }
 
@@ -136,7 +136,7 @@ namespace vPilot_Pushover {
                 cacheLoaded = true;
 
             } else {
-                Plugin.SendDebug("[ACARS] okCheck Error: " + response);
+                Plugin.sendDebug("[ACARS] okCheck Error: " + response);
             }
 
         }
