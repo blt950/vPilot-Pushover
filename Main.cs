@@ -10,7 +10,7 @@ using RossCarlson.Vatsim.Vpilot.Plugins.Events;
 namespace vPilot_Pushover {
     public class Main : IPlugin {
 
-        public static string version = "0.0.2";
+        public static string version = "1.0.0";
 
         // Init
         private IBroker vPilot;
@@ -222,10 +222,10 @@ namespace vPilot_Pushover {
                     HttpResponseMessage response = await httpClient.GetAsync("https://raw.githubusercontent.com/blt950/vPilot-Pushover/main/version.txt");
                     if (response.IsSuccessStatusCode) {
                         string responseContent = await response.Content.ReadAsStringAsync();
-                        if (responseContent != ("v"+version)) {
+                        if (responseContent != (version)) {
                             await Task.Delay(5000);
-                            SendDebug($"Update available. Latest version is {responseContent}");
-                            SendPushover($"Update available. Latest version is {responseContent}. Download newest version at https://blt950.com", "vPilot Pushover Plugin");
+                            SendDebug($"Update available. Latest version is v{responseContent}");
+                            SendPushover($"Update available. Latest version is v{responseContent}. Download newest version at https://blt950.com", "vPilot Pushover Plugin");
                         }
                     } else {
                         SendDebug($"[Update Checker] HttpResponse request failed with status code: {response.StatusCode}");
