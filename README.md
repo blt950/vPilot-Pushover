@@ -1,6 +1,15 @@
 # vPilot Pushover
-Relay vPilot and Hoppie messages to your phone or tablet via [Pushover](https://pushover.net/). Requires [vPilot](https://vpilot.rosscarlson.dev/). Hoppie is integrated directly, meaning you can use any aircraft with this plugin.\
+Relay [vPilot](https://vpilot.rosscarlson.dev/) and [Hoppie](https://www.hoppie.nl/acars/) messages to your mobile device via [Pushover](https://pushover.net/).\
+Hoppie is integrated directly, meaning you can use any aircraft with this plugin.
+
 ![Image of example notification of contact me](https://github.com/blt950/vPilot-Pushover/assets/2505044/68653e8a-8bca-45d4-8220-4a38f39d68d4)
+
+## Prerequisites
+1. [vPilot](https://vpilot.rosscarlson.dev/) that you use to connect to VATSIM
+2. [Pushover](https://pushover.net/) app on your device and subscription
+3. [Creating your own Pushover API key](https://pushover.net/apps/build) which is for your personal use
+
+*Pushover has a 30-day trial you can try out before you pay the one-time $5 for a lifetime subscription. You can use Pushover to much more than this plugin, the subscription is in no way tied to this plugin*
 
 ## Installation
 
