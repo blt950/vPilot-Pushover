@@ -15,6 +15,7 @@ In the `vPilot-Pushover.ini` file, you can configure the following settings:
 ### [Pushover]
 `UserKey` = Your Pushover user key. You can find this on the [Pushover dashboard](https://pushover.net/)\
 `ApiKey` = Your Pushover API key. You need to [create this youself in Pushover](https://pushover.net/apps/build)
+`Device` = The device name to send the notifications to. If you leave this blank, it will send to all devices. If you want to specifify multiple devices, separate them with a comma, e.g. `iphone,nexus5`
 
 ### [Hoppie]
 `Enabled` = Whether or not to relay Hoppie messages to Pushover. Set to `true` or `false`\
@@ -26,6 +27,9 @@ In the `vPilot-Pushover.ini` file, you can configure the following settings:
 ### [RelayRadio]
 `Enabled` = Whether or not to relay radio messages to Pushover. Only sends radio messages meant for your callsign, e.g. ATC writing to you on text. Set to `true` or `false`
 
+### [EnableSelcal]
+`Enabled` = Whether or not to relay SELCAL messages to Pushover. Set to `true` or `false`
+
 ## Contribution
 
-Feel free to contribute by creating pull requests or issues!
+Feel free to contribute by creating pull requests or issues in this Github!

@@ -28,10 +28,12 @@ namespace vPilot_Pushover {
 
         private Boolean settingPrivateEnabled = false;
         private Boolean settingRadioEnabled = false;
+        private Boolean settingSelcalEnabled = false;
         private Boolean settingHoppieEnabled = false;
         public String settingHoppieLogon = null;
         private String settingPushoverToken = null;
         private String settingPushoverUser = null;
+        private String settingPushoverDevice = null;
 
         /*
          * 
@@ -48,6 +50,7 @@ namespace vPilot_Pushover {
                 vPilot.NetworkDisconnected += OnNetworkDisconnectedHandler;
                 if (settingPrivateEnabled) vPilot.PrivateMessageReceived += OnPrivateMessageReceivedHandler;
                 if (settingRadioEnabled) vPilot.RadioMessageReceived += OnRadioMessageReceivedHandler;
+                if (settingSelcalEnabled) vPilot.SelcalAlertReceived += OnSelcalAlertReceivedHandler;
 
                 // Enable ACARS if Hoppie is enabled
                 if (settingHoppieEnabled) {
@@ -88,7 +91,8 @@ namespace vPilot_Pushover {
                 { "user", settingPushoverUser },
                 { "title",  title },
                 { "message", text },
-                { "priority", priority.ToString() }
+                { "priority", priority.ToString() },
+                { "device", settingPushoverDevice != "" ? settingPushoverDevice : "" }
             };
 
             var response = await client.PostAsync("https://api.pushover.net/1/messages.json", new FormUrlEncodedContent(values));
@@ -148,6 +152,17 @@ namespace vPilot_Pushover {
             }
 
         }
+
+        /*
+         * 
+         * Hook: SELCAL Message
+         *
+        */
+        private void OnSelcalAlertReceivedHandler( object sender, SelcalAlertReceivedEventArgs e ) {
+            string from = e.From;
+            SendPushover("SELCAL Alert", from, 1);
+        }
+        
 
         /*
          * 
