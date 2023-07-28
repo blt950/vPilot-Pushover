@@ -14,7 +14,7 @@ In the `vPilot-Pushover.ini` file, you can configure the following settings:
 
 ### [Pushover]
 `UserKey` = Your Pushover user key. You can find this on the [Pushover dashboard](https://pushover.net/)\
-`ApiKey` = Your Pushover API key. You need to [create this youself in Pushover](https://pushover.net/apps/build)
+`ApiKey` = Your Pushover API key. You need to [create this youself in Pushover](https://pushover.net/apps/build)\
 `Device` = The device name to send the notifications to. If you leave this blank, it will send to all devices. If you want to specifify multiple devices, separate them with a comma, e.g. `iphone,nexus5`
 
 ### [Hoppie]
