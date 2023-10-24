@@ -4,6 +4,8 @@ Hoppie is integrated directly, meaning you can use any aircraft with this plugin
 
 ![Image of example notification of contact me](https://github.com/blt950/vPilot-Pushover/assets/2505044/68653e8a-8bca-45d4-8220-4a38f39d68d4)
 
+Have also a look at my other projects at my homepage: [https://blt950.com](https://blt950.com)
+
 ## Prerequisites
 1. [vPilot](https://vpilot.rosscarlson.dev/) that you use to connect to VATSIM
 2. [Pushover](https://pushover.net/) app on your device and subscription
