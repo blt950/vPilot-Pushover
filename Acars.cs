@@ -104,7 +104,7 @@ namespace vPilot_Pushover {
                     string message = match.Groups[4].Value;
 
                     // Clean the messages
-                    message = Regex.Replace(match.Groups[4].Value, @"\/data\d\/\d+\/\/.+\/", "");
+                    message = Regex.Replace(match.Groups[4].Value, @"\/data\d\/\d+\/\d*\/.+\/", "");
                     message = Regex.Replace(message, @"@", "");
 
                     // Check if key doesnt' exist, then add it
