@@ -19,6 +19,14 @@ Have also a look at my other projects at my homepage: [https://blt950.com](https
 2. Download the latest release `.zip` only from the [releases page](https://github.com/blt950/vPilot-Pushover/releases)
 3. Extract the zip file and move both `vPilot-Pushover.dll` and `vPilot-Pushover.ini` to your vPilot plugin folder, usually `C:\Users\<your username>\AppData\Local\vPilot\Plugins`
 4. Open `vPilot-Pushover.ini` in a text editor and configure your desired settings
+5. When you start vPilot you should now get an "Connected. Running version x.x.x" push notification. If not, see troubleshooting below.
+
+## Troubleshooting
+### I don't receive any connected notification
+- Make sure you have placed the plugin in the correct folder, usually like this `C:\Users\<your username>\AppData\Local\vPilot\Plugins\vPilot-Pushover.dll` and `.ini` in the same folder.
+- Your Windows might have blocked the `.dll` file. This is because the `.dll` is not [code-signed](https://en.wikipedia.org/wiki/Code_signing) as it's a hobby project and I don't have $200/yearly to purchase a verification. Before you unblock the file, check it with your antivirus or upload it to [VirusTotal](https://www.virustotal.com/gui/home/upload). If you're comfortable to proceed, right click on the `vPilot-Pushover.dll`, open Properties, unblock and apply to allow vPilot to load the plugin.
+
+*Still having an issue? Make an issue request here on Github.*
 
 ## Settings
 In the `vPilot-Pushover.ini` file, you can configure the following settings:
