@@ -150,6 +150,9 @@ namespace vPilot_Pushover {
             if (message.Contains(connectedCallsign)) {
                 sendPushover(message, from, 1);
             }
+            else if(message.Contains("Simulator crash detected")) {
+              sendPushover(message, from, 1);
+            }
 
         }
 
