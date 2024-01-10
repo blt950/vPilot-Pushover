@@ -121,6 +121,8 @@ namespace vPilot_Pushover {
         private void onNetworkDisconnectedHandler( object sender, EventArgs e ) {
             connectedCallsign = null;
 
+            sendPushover("Possible sim crash", "vPilot", 1);
+
             if (settingHoppieEnabled) {
                 acars.stop();
             }
@@ -162,7 +164,6 @@ namespace vPilot_Pushover {
             string from = e.From;
             sendPushover("SELCAL Alert", from, 1);
         }
-        
 
         /*
          * 
