@@ -10,7 +10,7 @@ using RossCarlson.Vatsim.Vpilot.Plugins.Events;
 namespace vPilot_Pushover {
     public class Main : IPlugin {
 
-        public static string version = "1.0.1";
+        public static string version = "1.0.2";
 
         // Init
         private IBroker vPilot;
@@ -30,10 +30,14 @@ namespace vPilot_Pushover {
         private Boolean settingRadioEnabled = false;
         private Boolean settingSelcalEnabled = false;
         private Boolean settingHoppieEnabled = false;
+        private Boolean settingTelegramEnabled = false;
+        private Boolean settingDisconnectEnabled = false;
         public String settingHoppieLogon = null;
         private String settingPushoverToken = null;
         private String settingPushoverUser = null;
         private String settingPushoverDevice = null;
+        private String settingTelegramBotToken = null;
+        private String settingTelegramChatId = null;
 
         /*
          * 
@@ -51,7 +55,6 @@ namespace vPilot_Pushover {
                 if (settingPrivateEnabled) vPilot.PrivateMessageReceived += onPrivateMessageReceivedHandler;
                 if (settingRadioEnabled) vPilot.RadioMessageReceived += onRadioMessageReceivedHandler;
                 if (settingSelcalEnabled) vPilot.SelcalAlertReceived += onSelcalAlertReceivedHandler;
-
                 // Enable ACARS if Hoppie is enabled
                 if (settingHoppieEnabled) {
                     acars = new Acars();
@@ -84,20 +87,40 @@ namespace vPilot_Pushover {
          *
         */
         public async void sendPushover( String text, String title = "", int priority = 0 ) {
-
-            var values = new Dictionary<string, string>
+            if (settingTelegramEnabled)
             {
-                { "token", settingPushoverToken },
-                { "user", settingPushoverUser },
-                { "title",  title },
-                { "message", text },
-                { "priority", priority.ToString() },
-                { "device", settingPushoverDevice != "" ? settingPushoverDevice : "" }
-            };
+                // Construct the message for Telegram
+                string telegramMessage = $"{title}\n\n{text}";
+                string telegramMessage_debug = $"DEBUG: {title}\n\n{text}";
+                // Prepare the Telegram API URL
+                string telegramApiUrl = $"https://api.telegram.org/bot{settingTelegramBotToken}/sendMessage";
 
-            var response = await client.PostAsync("https://api.pushover.net/1/messages.json", new FormUrlEncodedContent(values));
-            var responseString = await response.Content.ReadAsStringAsync();
+                // Create the form data for the POST request
+                var values = new Dictionary<string, string>
+                {
+                    { "chat_id", settingTelegramChatId },
+                    { "text", telegramMessage }
+                };
 
+                // Send the POST request to Telegram
+                var response = await client.PostAsync(telegramApiUrl, new FormUrlEncodedContent(values));
+                var responseString = await response.Content.ReadAsStringAsync();
+            }
+            else
+            {
+                var values = new Dictionary<string, string>
+                {
+                    { "token", settingPushoverToken },
+                    { "user", settingPushoverUser },
+                    { "title",  title },
+                    { "message", text },
+                    { "priority", priority.ToString() },
+                    { "device", settingPushoverDevice != "" ? settingPushoverDevice : "" }
+                };
+
+                var response = await client.PostAsync("https://api.pushover.net/1/messages.json", new FormUrlEncodedContent(values));
+                var responseString = await response.Content.ReadAsStringAsync();
+            }
         }
 
         /*
@@ -112,7 +135,6 @@ namespace vPilot_Pushover {
                 acars.start();
             }
         }
-
         /*
          * 
          * Hook: Network disconnected
@@ -124,6 +146,9 @@ namespace vPilot_Pushover {
             if (settingHoppieEnabled) {
                 acars.stop();
             }
+            if (settingDisconnectEnabled) {
+                sendPushover("Disconnected from network", "vPilot", 1);
+            }
         }
 
         /*
@@ -134,7 +159,6 @@ namespace vPilot_Pushover {
         private void onPrivateMessageReceivedHandler( object sender, PrivateMessageReceivedEventArgs e ) {
             string from = e.From;
             string message = e.Message;
-
             sendPushover(message, from, 1);
         }
 
@@ -186,9 +210,18 @@ namespace vPilot_Pushover {
                 settingPrivateEnabled = settingsFile.KeyExists("Enabled", "RelayPrivate") ? Boolean.Parse(settingsFile.Read("Enabled", "RelayPrivate")) : false;
                 settingRadioEnabled = settingsFile.KeyExists("Enabled", "RelayRadio") ? Boolean.Parse(settingsFile.Read("Enabled", "RelayRadio")) : false;
                 settingSelcalEnabled = settingsFile.KeyExists("Enabled", "RelaySelcal") ? Boolean.Parse(settingsFile.Read("Enabled", "RelaySelcal")) : false;
-
+                settingTelegramEnabled = settingsFile.KeyExists("Enabled", "Telegram") ? Boolean.Parse(settingsFile.Read("Enabled", "Telegram")) : false;
+                settingTelegramBotToken = settingsFile.KeyExists("BotToken", "Telegram") ? settingsFile.Read("BotToken", "Telegram") : null;
+                settingTelegramChatId = settingsFile.KeyExists("ChatId", "Telegram") ? settingsFile.Read("ChatId", "Telegram") : null;
+                settingDisconnectEnabled = settingsFile.KeyExists("Enabled", "Disconnect") ? Boolean.Parse(settingsFile.Read("Enabled", "Disconnect")) : false;
                 // Validate values
-                if (settingPushoverToken == null || settingPushoverUser == null) {
+                if (!settingTelegramEnabled){
+                    if (settingPushoverToken == null || settingPushoverUser == null) {
+                    sendDebug("Pushover API key or user key not set. Check your vPilot-Pushover.ini");
+                    return;
+                }
+                }
+                else if (settingTelegramChatId == null || settingTelegramBotToken == null) {
                     sendDebug("Pushover API key or user key not set. Check your vPilot-Pushover.ini");
                     return;
                 }
