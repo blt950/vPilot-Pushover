@@ -1,4 +1,6 @@
 # vPilot Pushover
+[![Github All Releases](https://img.shields.io/github/downloads/blt950/vPilot-Pushover/total.svg)]()
+
 Relay [vPilot](https://vpilot.rosscarlson.dev/) and [Hoppie](https://www.hoppie.nl/acars/) messages to your mobile device via [Pushover](https://pushover.net/).\
 Hoppie is integrated directly, meaning you can use any aircraft with this plugin.
 
