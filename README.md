@@ -25,6 +25,7 @@ I won't make an X-Plane variant of this plugin, [see reasoning here](https://git
 ## Troubleshooting
 ### I don't receive any connected notification
 - Make sure you have placed the plugin in the correct folder, usually like this `C:\Users\<your username>\AppData\Local\vPilot\Plugins\vPilot-Pushover.dll` and `.ini` in the same folder.
+- Make sure you've configured both your Pushover user key and your Pushover API key and that they are each surrounded by quotation marks.
 - Your Windows might have blocked the `.dll` file. This is because the `.dll` is not [code-signed](https://en.wikipedia.org/wiki/Code_signing) as it's a hobby project and I don't have $200/yearly to purchase a verification. Before you unblock the file, check it with your antivirus or upload it to [VirusTotal](https://www.virustotal.com/gui/home/upload). If you're comfortable to proceed, right click on the `vPilot-Pushover.dll`, open Properties, unblock and apply to allow vPilot to load the plugin.
 
 *Still having an issue? Make an issue request here on Github.*
