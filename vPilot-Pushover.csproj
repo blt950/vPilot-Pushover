@@ -31,7 +31,8 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="RossCarlson.Vatsim.Vpilot.Plugins">
+    <Reference Include="RossCarlson.Vatsim.Vpilot.Plugins, Version=3.9.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
       <HintPath>F:\VATSIM\vPilot\RossCarlson.Vatsim.Vpilot.Plugins.dll</HintPath>
     </Reference>
     <Reference Include="System" />
