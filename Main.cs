@@ -10,12 +10,12 @@ using RossCarlson.Vatsim.Vpilot.Plugins.Events;
 namespace vPilot_Pushover {
     public class Main : IPlugin {
 
-        public static string version = "1.0.1";
+        public static string version = "1.1.0";
 
         // Init
         private IBroker vPilot;
+        private INotifier notifier;
         private Acars acars;
-        private static readonly HttpClient client = new HttpClient();
 
         public string Name { get; } = "vPilot Pushover";
 
@@ -26,14 +26,18 @@ namespace vPilot_Pushover {
         private Boolean settingsLoaded = false;
         private IniFile settingsFile;
 
+        private String settingDriver = null;
         private Boolean settingPrivateEnabled = false;
         private Boolean settingRadioEnabled = false;
         private Boolean settingSelcalEnabled = false;
         private Boolean settingHoppieEnabled = false;
+        private Boolean settingDisconnectEnabled = false;
         public String settingHoppieLogon = null;
         private String settingPushoverToken = null;
         private String settingPushoverUser = null;
         private String settingPushoverDevice = null;
+        private String settingTelegramBotToken = null;
+        private String settingTelegramChatId = null;
 
         /*
          * 
@@ -45,6 +49,44 @@ namespace vPilot_Pushover {
             loadSettings();
 
             if (settingsLoaded) {
+
+                // Load the correct notifier driver
+                if (settingDriver.ToLower() == "pushover") {
+                    notifier = new Drivers.Pushover();
+
+                    NotifierConfig config;
+                    config = new NotifierConfig {
+                        settingPushoverToken = settingPushoverToken,
+                        settingPushoverUser = settingPushoverUser,
+                        settingPushoverDevice = settingPushoverDevice
+                    };
+                    notifier.init(config);
+                    if(!notifier.hasValidConfig()) {
+                        sendDebug("Pushover API key or user key not set. Check your vPilot-Pushover.ini");
+                        return;
+                    }
+
+                    sendDebug("Driver set to Pushover");
+                } else if (settingDriver.ToLower() == "telegram") {
+                    notifier = new Drivers.Telegram();
+
+                    NotifierConfig config;
+                    config = new NotifierConfig {
+                        settingTelegramBotToken = settingTelegramBotToken,
+                        settingTelegramChatId = settingTelegramChatId
+                    };
+                    notifier.init(config);
+                    if (!notifier.hasValidConfig()) {
+                        sendDebug("Telegram bot token or chat ID not set. Check your vPilot-Pushover.ini");
+                        return;
+                    }
+
+                    sendDebug("Driver set to Telegram");
+                } else {
+                    sendDebug("Driver not set correctly. Check your vPilot-Pushover.ini");
+                    return;
+                }
+
                 // Subscribe to events according to settings
                 vPilot.NetworkConnected += onNetworkConnectedHandler;
                 vPilot.NetworkDisconnected += onNetworkDisconnectedHandler;
@@ -55,10 +97,10 @@ namespace vPilot_Pushover {
                 // Enable ACARS if Hoppie is enabled
                 if (settingHoppieEnabled) {
                     acars = new Acars();
-                    acars.init(this, settingHoppieLogon);
+                    acars.init(this, notifier, settingHoppieLogon);
                 }
 
-                sendPushover($"Connected. Running version v{version}");
+                notifier.sendMessage($"Connected. Running version v{version}");
                 sendDebug($"vPilot Pushover connected and enabled on v{version}");
 
                 updateChecker();
@@ -80,28 +122,6 @@ namespace vPilot_Pushover {
 
         /*
          * 
-         * Send Pushover message
-         *
-        */
-        public async void sendPushover( String text, String title = "", int priority = 0 ) {
-
-            var values = new Dictionary<string, string>
-            {
-                { "token", settingPushoverToken },
-                { "user", settingPushoverUser },
-                { "title",  title },
-                { "message", text },
-                { "priority", priority.ToString() },
-                { "device", settingPushoverDevice != "" ? settingPushoverDevice : "" }
-            };
-
-            var response = await client.PostAsync("https://api.pushover.net/1/messages.json", new FormUrlEncodedContent(values));
-            var responseString = await response.Content.ReadAsStringAsync();
-
-        }
-
-        /*
-         * 
          * Hook: Network connected
          *
         */
@@ -112,7 +132,6 @@ namespace vPilot_Pushover {
                 acars.start();
             }
         }
-
         /*
          * 
          * Hook: Network disconnected
@@ -124,6 +143,10 @@ namespace vPilot_Pushover {
             if (settingHoppieEnabled) {
                 acars.stop();
             }
+
+            if (settingDisconnectEnabled) {
+                notifier.sendMessage("Disconnected from network", "vPilot", 1);
+            }
         }
 
         /*
@@ -134,8 +157,7 @@ namespace vPilot_Pushover {
         private void onPrivateMessageReceivedHandler( object sender, PrivateMessageReceivedEventArgs e ) {
             string from = e.From;
             string message = e.Message;
-
-            sendPushover(message, from, 1);
+            notifier.sendMessage(message, from, 1);
         }
 
         /*
@@ -148,7 +170,7 @@ namespace vPilot_Pushover {
             string message = e.Message;
 
             if (message.Contains(connectedCallsign)) {
-                sendPushover(message, from, 1);
+                notifier.sendMessage(message, from, 1);
             }
 
         }
@@ -160,7 +182,7 @@ namespace vPilot_Pushover {
         */
         private void onSelcalAlertReceivedHandler( object sender, SelcalAlertReceivedEventArgs e ) {
             string from = e.From;
-            sendPushover("SELCAL Alert", from, 1);
+            notifier.sendMessage("SELCAL Alert", from, 1);
         }
         
 
@@ -178,6 +200,7 @@ namespace vPilot_Pushover {
                 settingsFile = new IniFile(configFile);
 
                 // Set all values
+                settingDriver = settingsFile.KeyExists("Driver", "General") ? settingsFile.Read("Driver", "General") : null;
                 settingPushoverToken = settingsFile.KeyExists("ApiKey", "Pushover") ? settingsFile.Read("ApiKey", "Pushover") : null;
                 settingPushoverUser = settingsFile.KeyExists("UserKey", "Pushover") ? settingsFile.Read("UserKey", "Pushover") : null;
                 settingPushoverDevice = settingsFile.KeyExists("Device", "Pushover") ? settingsFile.Read("Device", "Pushover") : null;
@@ -186,16 +209,14 @@ namespace vPilot_Pushover {
                 settingPrivateEnabled = settingsFile.KeyExists("Enabled", "RelayPrivate") ? Boolean.Parse(settingsFile.Read("Enabled", "RelayPrivate")) : false;
                 settingRadioEnabled = settingsFile.KeyExists("Enabled", "RelayRadio") ? Boolean.Parse(settingsFile.Read("Enabled", "RelayRadio")) : false;
                 settingSelcalEnabled = settingsFile.KeyExists("Enabled", "RelaySelcal") ? Boolean.Parse(settingsFile.Read("Enabled", "RelaySelcal")) : false;
+                settingTelegramBotToken = settingsFile.KeyExists("BotToken", "Telegram") ? settingsFile.Read("BotToken", "Telegram") : null;
+                settingTelegramChatId = settingsFile.KeyExists("ChatId", "Telegram") ? settingsFile.Read("ChatId", "Telegram") : null;
+                settingDisconnectEnabled = settingsFile.KeyExists("Enabled", "Disconnect") ? Boolean.Parse(settingsFile.Read("Enabled", "Disconnect")) : false;
 
                 // Validate values
-                if (settingPushoverToken == null || settingPushoverUser == null) {
-                    sendDebug("Pushover API key or user key not set. Check your vPilot-Pushover.ini");
-                    return;
-                }
-
                 if (settingHoppieEnabled && settingHoppieLogon == null) {
                     sendDebug("Hoppie logon code not set. Check your vPilot-Pushover.ini");
-                    sendPushover("Hoppie logon code not set. Check your vPilot-Pushover.ini");
+                    notifier.sendMessage("Hoppie logon code not set. Check your vPilot-Pushover.ini");
                 }
 
                 settingsLoaded = true;
@@ -221,7 +242,7 @@ namespace vPilot_Pushover {
                         if (responseContent != (version)) {
                             await Task.Delay(5000);
                             sendDebug($"Update available. Latest version is v{responseContent}");
-                            sendPushover($"Update available. Latest version is v{responseContent}. Download newest version at https://blt950.com", "vPilot Pushover Plugin");
+                            notifier.sendMessage($"Update available. Latest version is v{responseContent}. Download newest version at https://blt950.com", "vPilot Pushover Plugin");
                         }
                     } else {
                         sendDebug($"[Update Checker] HttpResponse request failed with status code: {response.StatusCode}");

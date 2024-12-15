@@ -32,7 +32,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="RossCarlson.Vatsim.Vpilot.Plugins">
-      <HintPath>E:\VATSIM\vPilot\RossCarlson.Vatsim.Vpilot.Plugins.dll</HintPath>
+      <HintPath>F:\VATSIM\vPilot\RossCarlson.Vatsim.Vpilot.Plugins.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -45,7 +45,10 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Acars.cs" />
+    <Compile Include="Drivers\Pushover.cs" />
+    <Compile Include="Drivers\Telegram.cs" />
     <Compile Include="IniFile.cs" />
+    <Compile Include="INotifier.cs" />
     <Compile Include="Main.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
