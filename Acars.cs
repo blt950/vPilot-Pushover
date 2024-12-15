@@ -9,6 +9,7 @@ namespace vPilot_Pushover {
 
         // Init
         private static Main Plugin;
+        private static INotifier notifier;
         private static List<Dictionary<string, string>> hoppieCache = new List<Dictionary<string, string>>();
         private static Boolean cacheLoaded = false;
 
@@ -19,8 +20,9 @@ namespace vPilot_Pushover {
          * Initilise the ACARS
          *
         */
-        public void init( Main main, String logon ) {
+        public void init( Main main, INotifier notifier, String logon ) {
             Plugin = main;
+            Acars.notifier = notifier;
 
             hoppieTimer.Elapsed += new ElapsedEventHandler(fetchHoppie);
             hoppieTimer.Interval = 45 * 1000;
@@ -123,7 +125,7 @@ namespace vPilot_Pushover {
 
                         // Send the message to Pushover
                         if (cacheLoaded == true && message != "") {
-                            Plugin.sendPushover(message, $"{from} ({type.ToUpper()})");
+                            notifier.sendMessage(message, $"{from} ({type.ToUpper()})");
                         }
 
                         Plugin.sendDebug($"[ACARS] Cached {key} with message: {message}");
