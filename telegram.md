@@ -1,3 +1,5 @@
+# Creating Telegram Bot
+
 1. Message BotFather in Telegram with `/newbot`
 2. Give your bot a name by replying (name must end in bot) for example with `vPilot_bot`
 3. This will generate a reply with a BotToken and link to join the chat with your bot, join this chat
