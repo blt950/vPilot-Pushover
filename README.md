@@ -39,8 +39,8 @@ In the `vPilot-Pushover.ini` file, you can configure the following settings:
 `Device` = The device name to send the notifications to. If you leave this blank, it will send to all devices. If you want to specifify multiple devices, separate them with a comma, e.g. `iphone,nexus5`
 
 ### [Telegram]
-`BotToken` = Your Telgram bot API key, see [this](#optional-using-telegram-bot-instead-of-pushover) for instructions\
-`ChatId` = Your Telgram bots chat id key, see [this](#optional-using-telegram-bot-instead-of-pushover) for instructions
+`BotToken` = Your Telgram bot API key, see [this](telegram.md) for instructions\
+`ChatId` = Your Telgram bots chat id key, see [this](telegram.md) for instructions
 
 ### [Hoppie]
 `Enabled` = Whether or not to relay Hoppie messages. Set to `true` or `false`\
