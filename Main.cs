@@ -38,6 +38,8 @@ namespace vPilot_Pushover {
         private String settingPushoverDevice = null;
         private String settingTelegramBotToken = null;
         private String settingTelegramChatId = null;
+        private String settingGotifyUrl = null;
+        private String settingGotifyToken = null;
 
         /*
          * 
@@ -82,6 +84,23 @@ namespace vPilot_Pushover {
                     }
 
                     sendDebug("Driver set to Telegram");
+                } else if (settingDriver.ToLower() == "gotify") {
+                    notifier = new Drivers.Gotify();
+
+                    NotifierConfig config;
+                    config = new NotifierConfig
+                    {
+                        settingGotifyUrl = settingGotifyUrl,
+                        settingGotifyToken = settingGotifyToken
+                    };
+                    notifier.init(config);
+                    if (!notifier.hasValidConfig())
+                    {
+                        sendDebug("Invalid Gotify server URL or app token. Check your vPilot-Pushover.ini");
+                        return;
+                    }
+
+                    sendDebug("Driver set to Gotify");
                 } else {
                     sendDebug("Driver not set correctly. Check your vPilot-Pushover.ini");
                     return;
@@ -212,6 +231,8 @@ namespace vPilot_Pushover {
                 settingTelegramBotToken = settingsFile.KeyExists("BotToken", "Telegram") ? settingsFile.Read("BotToken", "Telegram") : null;
                 settingTelegramChatId = settingsFile.KeyExists("ChatId", "Telegram") ? settingsFile.Read("ChatId", "Telegram") : null;
                 settingDisconnectEnabled = settingsFile.KeyExists("Enabled", "Disconnect") ? Boolean.Parse(settingsFile.Read("Enabled", "Disconnect")) : false;
+                settingGotifyUrl = settingsFile.KeyExists("Url", "Gotify") ? settingsFile.Read("Url", "Gotify") : null;
+                settingGotifyToken = settingsFile.KeyExists("Token", "Gotify") ? settingsFile.Read("Token", "Gotify") : null;
 
                 // Validate values
                 if (settingHoppieEnabled && settingHoppieLogon == null) {
