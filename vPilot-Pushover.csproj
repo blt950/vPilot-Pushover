@@ -49,6 +49,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Acars.cs" />
+    <Compile Include="Drivers\Gotify.cs" />
     <Compile Include="Drivers\Pushover.cs" />
     <Compile Include="Drivers\Telegram.cs" />
     <Compile Include="IniFile.cs" />

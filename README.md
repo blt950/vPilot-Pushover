@@ -1,7 +1,7 @@
 # vPilot Pushover
 [![Github All Releases](https://img.shields.io/github/downloads/blt950/vPilot-Pushover/total.svg)]()
 
-Relay [vPilot](https://vpilot.rosscarlson.dev/) and [Hoppie](https://www.hoppie.nl/acars/) messages to your mobile device via [Pushover](https://pushover.net/) or [Telegram](https://telegram.org/).\
+Relay [vPilot](https://vpilot.rosscarlson.dev/) and [Hoppie](https://www.hoppie.nl/acars/) messages to your mobile device via [Pushover](https://pushover.net/), [Telegram](https://telegram.org/) or [Gotify](https://gotify.net/).\
 Hoppie is integrated directly, meaning you can use any aircraft with this plugin.
 
 ![Image of example notification of contact me](https://github.com/blt950/vPilot-Pushover/assets/2505044/68653e8a-8bca-45d4-8220-4a38f39d68d4)
@@ -10,7 +10,7 @@ Have also a look at my other projects at my homepage: [https://blt950.com](https
 I won't make an X-Plane variant of this plugin, [see reasoning here](https://github.com/blt950/vPilot-Pushover/issues/14#issuecomment-1979402032).
 
 ## Prerequisites
-You need [vPilot](https://vpilot.rosscarlson.dev/) that you use to connect to VATSIM. Then choose between Pushover or Telegram as notifier.
+You need [vPilot](https://vpilot.rosscarlson.dev/) that you use to connect to VATSIM. Then choose one of the following notifiers.
 
 ### Pushover
 - [Create your own Pushover API key](https://pushover.net/apps/build) which is for your personal use
@@ -18,6 +18,10 @@ You need [vPilot](https://vpilot.rosscarlson.dev/) that you use to connect to VA
 
 ### Telegram
 - [Create a Telegram bot](telegram.md) for credentials you need for the settings
+
+### Gotify
+- It's required to install gotify server beforehand. Check [Gotify Docs](https://gotify.net/docs/index) for more infomation
+- Please note that only Android phone is officially supported by them. See [this](https://github.com/gotify/android)
 
 ## Installation
 
@@ -31,7 +35,7 @@ You need [vPilot](https://vpilot.rosscarlson.dev/) that you use to connect to VA
 In the `vPilot-Pushover.ini` file, you can configure the following settings:
 
 ### [General]
-`Driver` = Choose your notifier method, write `pushover` or `telegram` in lowercase.
+`Driver` = Choose your notifier method, write `pushover`, `telegram` or `gotify` in lowercase.
 
 ### [Pushover]
 `UserKey` = Your Pushover user key. You can find this on the [Pushover dashboard](https://pushover.net/)\
@@ -41,6 +45,10 @@ In the `vPilot-Pushover.ini` file, you can configure the following settings:
 ### [Telegram]
 `BotToken` = Your Telgram bot API key, see [this](telegram.md) for instructions\
 `ChatId` = Your Telgram bots chat id key, see [this](telegram.md) for instructions
+
+### [Gotify]
+`Url` = Your Gotify server address. For example, `https://push.example.com`, `https://example.com/gotify`, depending on your server configuration.\
+`Token` = Your Gotify application token. see [this](https://gotify.net/docs/pushmsg)
 
 ### [Hoppie]
 `Enabled` = Whether or not to relay Hoppie messages. Set to `true` or `false`\
