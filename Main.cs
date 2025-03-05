@@ -10,7 +10,7 @@ using RossCarlson.Vatsim.Vpilot.Plugins.Events;
 namespace vPilot_Pushover {
     public class Main : IPlugin {
 
-        public static string version = "1.1.0";
+        public static string version = "1.2.0";
 
         // Init
         private IBroker vPilot;
