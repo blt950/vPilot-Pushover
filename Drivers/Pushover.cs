@@ -1,61 +1,41 @@
-﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Net.Http;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace vPilot_Pushover.Drivers {
     internal class Pushover : INotifier {
 
-        // Init
-        private static readonly HttpClient client = new HttpClient();
-        private String settingPushoverToken = null;
-        private String settingPushoverUser = null;
-        private String settingPushoverDevice = null;
+        private static readonly HttpClient _client = new HttpClient();
 
-        /*
-         * 
-         * Initilise the driver
-         *
-        */
-        public void init( NotifierConfig config ) {
-            this.settingPushoverToken = config.settingPushoverToken;
-            this.settingPushoverUser = config.settingPushoverUser;
-            this.settingPushoverDevice = config.settingPushoverDevice;
+        private string _token;
+        private string _user;
+        private string _device;
+
+        public void Initialize(NotifierConfig config) {
+            _token = config.PushoverToken;
+            _user = config.PushoverUser;
+            _device = config.PushoverDevice;
         }
 
-        /*
-         * 
-         * Validate the configuration
-         *
-        */
-        public Boolean hasValidConfig() {
-            if (this.settingPushoverToken == null || this.settingPushoverUser == null) {
-                return false;
-            }
-            return true;
+        public bool HasValidConfig() {
+            return _token != null && _user != null;
         }
 
-        /*
-         * 
-         * Send Pushover message
-         *
-        */
-
-        public async void sendMessage( String text, String title = "", int priority = 0 ) {
+        public async Task SendMessageAsync(string text, string title = "", int priority = 0) {
             var values = new Dictionary<string, string>
             {
-                { "token", this.settingPushoverToken },
-                { "user", this.settingPushoverUser },
-                { "title",  title },
+                { "token", _token },
+                { "user", _user },
+                { "title", title },
                 { "message", text },
                 { "priority", priority.ToString() },
-                { "device", this.settingPushoverDevice != "" ? this.settingPushoverDevice : "" }
+                { "device", _device ?? "" }
             };
 
-            var response = await client.PostAsync("https://api.pushover.net/1/messages.json", new FormUrlEncodedContent(values));
-            var responseString = await response.Content.ReadAsStringAsync();
+            using (var content = new FormUrlEncodedContent(values)) {
+                var response = await _client.PostAsync("https://api.pushover.net/1/messages.json", content);
+                await response.Content.ReadAsStringAsync();
+            }
         }
 
     }

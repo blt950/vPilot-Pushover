@@ -1,43 +1,50 @@
-﻿using System.Text;
 using System.IO;
 using System.Reflection;
 using System.Runtime.InteropServices;
+using System.Text;
 
 namespace vPilot_Pushover {
     internal class IniFile {
-        string Path;
-        string EXE = Assembly.GetExecutingAssembly().GetName().Name;
+
+        private const int BufferSize = 255;
+
+        private readonly string _path;
+        private readonly string _defaultSection = Assembly.GetExecutingAssembly().GetName().Name;
 
         [DllImport("kernel32", CharSet = CharSet.Unicode)]
-        static extern long WritePrivateProfileString( string Section, string Key, string Value, string FilePath );
+        private static extern long WritePrivateProfileString(string section, string key, string value, string filePath);
 
         [DllImport("kernel32", CharSet = CharSet.Unicode)]
-        static extern int GetPrivateProfileString( string Section, string Key, string Default, StringBuilder RetVal, int Size, string FilePath );
+        private static extern int GetPrivateProfileString(string section, string key, string @default, StringBuilder retVal, int size, string filePath);
 
-        public IniFile( string IniPath = null ) {
-            Path = new FileInfo(IniPath ?? EXE + ".ini").FullName;
+        public IniFile(string iniPath = null) {
+            _path = new FileInfo(iniPath ?? _defaultSection + ".ini").FullName;
         }
 
-        public string Read( string Key, string Section = null ) {
-            var RetVal = new StringBuilder(255);
-            GetPrivateProfileString(Section ?? EXE, Key, "", RetVal, 255, Path);
-            return RetVal.ToString();
+        public string Read(string key, string section = null) {
+            var buffer = new StringBuilder(BufferSize);
+            GetPrivateProfileString(section ?? _defaultSection, key, "", buffer, BufferSize, _path);
+            return buffer.ToString();
         }
 
-        public void Write( string Key, string Value, string Section = null ) {
-            WritePrivateProfileString(Section ?? EXE, Key, Value, Path);
+        public string Read(string key, string section, string defaultValue) {
+            return KeyExists(key, section) ? Read(key, section) : defaultValue;
         }
 
-        public void DeleteKey( string Key, string Section = null ) {
-            Write(Key, null, Section ?? EXE);
+        public void Write(string key, string value, string section = null) {
+            WritePrivateProfileString(section ?? _defaultSection, key, value, _path);
         }
 
-        public void DeleteSection( string Section = null ) {
-            Write(null, null, Section ?? EXE);
+        public void DeleteKey(string key, string section = null) {
+            Write(key, null, section ?? _defaultSection);
         }
 
-        public bool KeyExists( string Key, string Section = null ) {
-            return Read(Key, Section).Length > 0;
+        public void DeleteSection(string section = null) {
+            Write(null, null, section ?? _defaultSection);
+        }
+
+        public bool KeyExists(string key, string section = null) {
+            return Read(key, section).Length > 0;
         }
     }
 }
