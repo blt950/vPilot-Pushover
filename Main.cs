@@ -8,6 +8,8 @@ using Microsoft.Win32;
 using RossCarlson.Vatsim.Vpilot.Plugins;
 using RossCarlson.Vatsim.Vpilot.Plugins.Events;
 
+using vPilot_Pushover.Notifications;
+
 namespace vPilot_Pushover {
 
     internal class PluginSettings {
@@ -87,19 +89,21 @@ namespace vPilot_Pushover {
             _vPilot = broker;
             LoadSettings();
 
+            ReportLoadFailure($"{Name} plugin failed to load. Check your vPilot-Pushover.ini");
+
             if (!_settingsLoaded) {
-                SendDebug("vPilot Pushover plugin failed to load. Check your vPilot-Pushover.ini");
+                ReportLoadFailure($"{Name} plugin failed to load. Check your vPilot-Pushover.ini");
                 return;
             }
 
             if (_settings.Driver == null || !_driverFactories.TryGetValue(_settings.Driver, out var factory)) {
-                SendDebug("Driver not set correctly. Check your vPilot-Pushover.ini");
+                ReportLoadFailure("Driver not set correctly. Check your vPilot-Pushover.ini");
                 return;
             }
 
             _notifier = factory(_settings);
             if (!_notifier.HasValidConfig()) {
-                SendDebug($"{_settings.Driver} configuration is invalid. Check your vPilot-Pushover.ini");
+                ReportLoadFailure($"{_settings.Driver} configuration is invalid. Check your vPilot-Pushover.ini");
                 return;
             }
 
@@ -119,13 +123,18 @@ namespace vPilot_Pushover {
             }
 
             _ = _notifier.SendMessageAsync($"Connected. Running version v{Version}");
-            SendDebug($"vPilot Pushover connected and enabled on v{Version}");
+            SendDebug($"{Name} connected and enabled on v{Version}");
 
             _ = CheckForUpdatesAsync();
         }
 
         public void SendDebug(string text) {
             _vPilot.PostDebugMessage(text);
+        }
+
+        private void ReportLoadFailure(string message) {
+            SendDebug(message);
+            LoadFailureNotifier.Show(Name, message);
         }
 
         private void OnNetworkConnected(object sender, NetworkConnectedEventArgs e) {
@@ -218,7 +227,7 @@ namespace vPilot_Pushover {
                     SendDebug($"Update available. Latest version is v{latest}");
                     await _notifier.SendMessageAsync(
                         $"Update available. Latest version is v{latest}. Download newest version at https://blt950.com",
-                        "vPilot Pushover Plugin");
+                        $"{Name} Plugin");
                 }
             } catch (Exception ex) {
                 SendDebug($"[Update Checker] An HttpResponse error occurred: {ex.Message}");

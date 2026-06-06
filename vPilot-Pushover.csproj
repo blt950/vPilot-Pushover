@@ -45,6 +45,8 @@
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
     <Reference Include="System.Net.Http" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Drawing" />
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
@@ -55,6 +57,7 @@
     <Compile Include="IniFile.cs" />
     <Compile Include="INotifier.cs" />
     <Compile Include="Main.cs" />
+    <Compile Include="Notifications\LoadFailureNotifier.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
