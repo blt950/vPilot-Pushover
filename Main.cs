@@ -27,6 +27,14 @@ namespace vPilot_Pushover {
         public string TelegramChatId { get; set; }
         public string GotifyUrl { get; set; }
         public string GotifyToken { get; set; }
+
+        // Per-message-type priority, passed through to the driver.
+        // Driver semantics: Pushover -2..2, Gotify 0..10, Telegram ignored.
+        public int PrivatePriority { get; set; }
+        public int RadioPriority { get; set; }
+        public int SelcalPriority { get; set; }
+        public int HoppiePriority { get; set; }
+        public int DisconnectPriority { get; set; }
     }
 
     public class Main : IPlugin {
@@ -89,8 +97,6 @@ namespace vPilot_Pushover {
             _vPilot = broker;
             LoadSettings();
 
-            ReportLoadFailure($"{Name} plugin failed to load. Check your vPilot-Pushover.ini");
-
             if (!_settingsLoaded) {
                 ReportLoadFailure($"{Name} plugin failed to load. Check your vPilot-Pushover.ini");
                 return;
@@ -119,7 +125,7 @@ namespace vPilot_Pushover {
             // Enable ACARS if Hoppie is enabled
             if (_settings.HoppieEnabled) {
                 _acars = new Acars();
-                _acars.Initialize(this, _notifier, _settings.HoppieLogon);
+                _acars.Initialize(this, _notifier, _settings.HoppieLogon, _settings.HoppiePriority);
             }
 
             _ = _notifier.SendMessageAsync($"Connected. Running version v{Version}");
@@ -153,22 +159,22 @@ namespace vPilot_Pushover {
             }
 
             if (_settings.DisconnectEnabled) {
-                _ = _notifier.SendMessageAsync("Disconnected from network", "vPilot", 1);
+                _ = _notifier.SendMessageAsync("Disconnected from network", "vPilot", _settings.DisconnectPriority);
             }
         }
 
         private void OnPrivateMessageReceived(object sender, PrivateMessageReceivedEventArgs e) {
-            _ = _notifier.SendMessageAsync(e.Message, e.From, 1);
+            _ = _notifier.SendMessageAsync(e.Message, e.From, _settings.PrivatePriority);
         }
 
         private void OnRadioMessageReceived(object sender, RadioMessageReceivedEventArgs e) {
             if (ConnectedCallsign != null && e.Message.Contains(ConnectedCallsign)) {
-                _ = _notifier.SendMessageAsync(e.Message, e.From, 1);
+                _ = _notifier.SendMessageAsync(e.Message, e.From, _settings.RadioPriority);
             }
         }
 
         private void OnSelcalAlertReceived(object sender, SelcalAlertReceivedEventArgs e) {
-            _ = _notifier.SendMessageAsync("SELCAL Alert", e.From, 1);
+            _ = _notifier.SendMessageAsync("SELCAL Alert", e.From, _settings.SelcalPriority);
         }
 
         private void LoadSettings() {
@@ -196,7 +202,15 @@ namespace vPilot_Pushover {
                     TelegramChatId = ini.Read("ChatId", "Telegram", null),
                     DisconnectEnabled = ParseBool(ini.Read("Enabled", "Disconnect", null)),
                     GotifyUrl = ini.Read("Url", "Gotify", null),
-                    GotifyToken = ini.Read("Token", "Gotify", null)
+                    GotifyToken = ini.Read("Token", "Gotify", null),
+
+                    // Defaults match the previously hard-coded values so existing
+                    // installs behave identically unless the user opts in.
+                    PrivatePriority = ParseInt(ini.Read("Priority", "RelayPrivate", null), 1),
+                    RadioPriority = ParseInt(ini.Read("Priority", "RelayRadio", null), 1),
+                    SelcalPriority = ParseInt(ini.Read("Priority", "RelaySelcal", null), 1),
+                    HoppiePriority = ParseInt(ini.Read("Priority", "Hoppie", null), 0),
+                    DisconnectPriority = ParseInt(ini.Read("Priority", "Disconnect", null), 1)
                 };
 
                 if (_settings.HoppieEnabled && _settings.HoppieLogon == null) {
@@ -209,6 +223,10 @@ namespace vPilot_Pushover {
 
         private static bool ParseBool(string value) {
             return value != null && bool.TryParse(value, out bool result) && result;
+        }
+
+        private static int ParseInt(string value, int defaultValue) {
+            return value != null && int.TryParse(value, out int result) ? result : defaultValue;
         }
 
         private async Task CheckForUpdatesAsync() {

@@ -34,12 +34,14 @@ namespace vPilot_Pushover {
         private Main _plugin;
         private INotifier _notifier;
         private string _logon;
+        private int _priority;
         private bool _cacheLoaded;
 
-        public void Initialize(Main main, INotifier notifier, string logon) {
+        public void Initialize(Main main, INotifier notifier, string logon, int priority) {
             _plugin = main;
             _notifier = notifier;
             _logon = logon;
+            _priority = priority;
 
             _hoppieTimer.Elapsed += FetchHoppie;
             _hoppieTimer.Interval = PollIntervalMs;
@@ -107,7 +109,7 @@ namespace vPilot_Pushover {
                 });
 
                 if (_cacheLoaded && message != "") {
-                    _ = _notifier.SendMessageAsync(message, $"{from} ({type.ToUpper()})");
+                    _ = _notifier.SendMessageAsync(message, $"{from} ({type.ToUpper()})", _priority);
                 }
 
                 _plugin.SendDebug($"[ACARS] Cached {key} with message: {message}");
