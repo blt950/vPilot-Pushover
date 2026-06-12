@@ -39,7 +39,7 @@ namespace vPilot_Pushover {
 
     public class Main : IPlugin {
 
-        public const string Version = "1.2.0";
+        public const string Version = "1.3.0";
 
         private static readonly HttpClient _httpClient = new HttpClient();
 
@@ -203,6 +203,7 @@ namespace vPilot_Pushover {
                     DisconnectEnabled = ParseBool(ini.Read("Enabled", "Disconnect", null)),
                     GotifyUrl = ini.Read("Url", "Gotify", null),
                     GotifyToken = ini.Read("Token", "Gotify", null),
+
                     PrivatePriority = ParseInt(ini.Read("Priority", "RelayPrivate", null), 1),
                     RadioPriority = ParseInt(ini.Read("Priority", "RelayRadio", null), 1),
                     SelcalPriority = ParseInt(ini.Read("Priority", "RelaySelcal", null), 1),
