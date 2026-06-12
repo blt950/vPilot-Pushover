@@ -6,13 +6,6 @@ using System.Timers;
 
 namespace vPilot_Pushover {
 
-    internal class HoppieMessage {
-        public string Key { get; set; }
-        public string From { get; set; }
-        public string Type { get; set; }
-        public string Message { get; set; }
-    }
-
     internal class Acars {
 
         private static readonly Regex HoppieMessagePattern =
@@ -29,7 +22,6 @@ namespace vPilot_Pushover {
 
         private readonly Timer _hoppieTimer = new Timer();
         private readonly HashSet<string> _seenKeys = new HashSet<string>();
-        private readonly List<HoppieMessage> _cache = new List<HoppieMessage>();
 
         private Main _plugin;
         private INotifier _notifier;
@@ -100,13 +92,6 @@ namespace vPilot_Pushover {
 
                 message = DataPrefixPattern.Replace(message, "");
                 message = AtSignPattern.Replace(message, "");
-
-                _cache.Add(new HoppieMessage {
-                    Key = key,
-                    From = from,
-                    Type = type,
-                    Message = message
-                });
 
                 if (_cacheLoaded && message != "") {
                     _ = _notifier.SendMessageAsync(message, $"{from} ({type.ToUpper()})", _priority);
