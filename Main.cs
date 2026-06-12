@@ -203,9 +203,6 @@ namespace vPilot_Pushover {
                     DisconnectEnabled = ParseBool(ini.Read("Enabled", "Disconnect", null)),
                     GotifyUrl = ini.Read("Url", "Gotify", null),
                     GotifyToken = ini.Read("Token", "Gotify", null),
-
-                    // Defaults match the previously hard-coded values so existing
-                    // installs behave identically unless the user opts in.
                     PrivatePriority = ParseInt(ini.Read("Priority", "RelayPrivate", null), 1),
                     RadioPriority = ParseInt(ini.Read("Priority", "RelayRadio", null), 1),
                     SelcalPriority = ParseInt(ini.Read("Priority", "RelaySelcal", null), 1),
@@ -213,10 +210,7 @@ namespace vPilot_Pushover {
                     DisconnectPriority = ParseInt(ini.Read("Priority", "Disconnect", null), 1)
                 };
 
-                // Hoppie is optional — disable it rather than failing the whole plugin
-                // load, but surface the misconfiguration so the user actually notices.
-                // Without this, ACARS would poll Hoppie with an empty logon every 45 s
-                // and spam the debug log with okCheck errors.
+                // Notify if Hoppie is enabled but LogonCode is missing, and disable ACARS to prevent errors.
                 if (_settings.HoppieEnabled && string.IsNullOrWhiteSpace(_settings.HoppieLogon)) {
                     _settings.HoppieEnabled = false;
                     ReportLoadFailure(

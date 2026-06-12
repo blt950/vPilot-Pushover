@@ -7,8 +7,6 @@ namespace vPilot_Pushover.Notifications {
 
     // Surfaces critical plugin load failures as a blocking Windows dialog
     // with a button that opens the troubleshooting guide in the browser.
-    // Used because vPilot's debug log is hidden unless the user launched
-    // vPilot in debug mode, but these messages require user action.
     internal static class LoadFailureNotifier {
 
         private const string TroubleshootingUrl = "https://github.com/blt950/vPilot-Pushover#troubleshooting";
@@ -16,7 +14,6 @@ namespace vPilot_Pushover.Notifications {
         public static void Show(string title, string message) {
             try {
                 using (var dialog = BuildDialog(title, message)) {
-                    // Matches the warning icon — Windows' standard "exclamation" ding.
                     SystemSounds.Exclamation.Play();
                     dialog.ShowDialog();
                 }
