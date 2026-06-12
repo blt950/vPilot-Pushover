@@ -213,8 +213,15 @@ namespace vPilot_Pushover {
                     DisconnectPriority = ParseInt(ini.Read("Priority", "Disconnect", null), 1)
                 };
 
-                if (_settings.HoppieEnabled && _settings.HoppieLogon == null) {
-                    SendDebug("Hoppie logon code not set. Check your vPilot-Pushover.ini");
+                // Hoppie is optional — disable it rather than failing the whole plugin
+                // load, but surface the misconfiguration so the user actually notices.
+                // Without this, ACARS would poll Hoppie with an empty logon every 45 s
+                // and spam the debug log with okCheck errors.
+                if (_settings.HoppieEnabled && string.IsNullOrWhiteSpace(_settings.HoppieLogon)) {
+                    _settings.HoppieEnabled = false;
+                    ReportLoadFailure(
+                        "Hoppie is enabled but the LogonCode is missing. ACARS has been disabled. " +
+                        "Set LogonCode in vPilot-Pushover.ini under [Hoppie].");
                 }
 
                 _settingsLoaded = true;
