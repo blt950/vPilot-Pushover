@@ -1,62 +1,37 @@
-﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Net.Http;
-using System.Text;
 using System.Threading.Tasks;
 
-namespace vPilot_Pushover.Drivers
-{
-    internal class Gotify : INotifier
-    {
+namespace vPilot_Pushover.Drivers {
+    internal class Gotify : INotifier {
 
-        // Init
-        private static readonly HttpClient client = new HttpClient();
-        private String settingGotifyUrl = null;
-        private String settingGotifyToken = null;
+        private static readonly HttpClient _client = new HttpClient();
 
-        /*
-         * 
-         * Initilise the driver
-         *
-        */
-        public void init(NotifierConfig config)
-        {
-            this.settingGotifyUrl = config.settingGotifyUrl;
-            this.settingGotifyToken = config.settingGotifyToken;
+        private string _url;
+        private string _token;
+
+        public void Initialize(NotifierConfig config) {
+            _url = config.GotifyUrl;
+            _token = config.GotifyToken;
         }
 
-        /*
-         * 
-         * Validate the configuration
-         *
-        */
-        public Boolean hasValidConfig()
-        {
-            if (this.settingGotifyUrl == null || this.settingGotifyToken == null)
-            {
-                return false;
-            }
-            return true;
+        public bool HasValidConfig() {
+            return _url != null && _token != null;
         }
 
-        /*
-         * 
-         * Send Pushover message
-         *
-        */
-
-        public async void sendMessage(String text, String title = "", int priority = 0)
-        {
+        public async Task SendMessageAsync(string text, string title = "", int priority = 0) {
             var values = new Dictionary<string, string>
             {
-                { "title",  title },
+                { "title", title },
                 { "message", text },
                 { "priority", priority.ToString() }
             };
 
-            var response = await client.PostAsync(this.settingGotifyUrl + "/message?token=" + this.settingGotifyToken, new FormUrlEncodedContent(values));
-            var responseString = await response.Content.ReadAsStringAsync();
+            string endpoint = $"{_url}/message?token={_token}";
+            using (var content = new FormUrlEncodedContent(values)) {
+                var response = await _client.PostAsync(endpoint, content);
+                await response.Content.ReadAsStringAsync();
+            }
         }
 
     }
