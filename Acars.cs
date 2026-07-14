@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Net.Http;
 using System.Text.RegularExpressions;
+using System.Threading.Tasks;
 using System.Timers;
 
 namespace vPilot_Pushover {
@@ -12,13 +13,9 @@ namespace vPilot_Pushover {
             new Regex(@"\{(\d+)\s(\w+)\s(\w+)\s\{([^\}]+)\}\}", RegexOptions.Compiled);
         private static readonly Regex DataPrefixPattern =
             new Regex(@"\/data\d\/\d+\/\d*\/.+\/", RegexOptions.Compiled);
-        private static readonly Regex AtSignPattern =
-            new Regex(@"@", RegexOptions.Compiled);
 
         private const string HoppieBaseUrl = "http://www.hoppie.nl/acars/system/connect.html";
         private const double PollIntervalMs = 45 * 1000;
-
-        private static readonly HttpClient _httpClient = new HttpClient();
 
         private readonly Timer _hoppieTimer = new Timer();
         private readonly HashSet<string> _seenKeys = new HashSet<string>();
@@ -35,23 +32,28 @@ namespace vPilot_Pushover {
             _logon = logon;
             _priority = priority;
 
-            _hoppieTimer.Elapsed += FetchHoppie;
+            _hoppieTimer.Elapsed += OnHoppieTimerElapsed;
             _hoppieTimer.Interval = PollIntervalMs;
         }
 
         public void Start() {
-            _hoppieTimer.Enabled = true;
+            _hoppieTimer.Start();
             _plugin.SendDebug("[ACARS] Starting ACARS");
-            FetchHoppie(null, null);
+            _ = FetchHoppieAsync();
         }
 
         public void Stop() {
-            _hoppieTimer.Enabled = false;
+            _hoppieTimer.Stop();
             _plugin.SendDebug("[ACARS] Stopping ACARS");
         }
 
-        // Timer event handler — async void is required by the ElapsedEventHandler signature.
-        private async void FetchHoppie(object source, ElapsedEventArgs e) {
+        // async void is required by the ElapsedEventHandler signature; the actual work
+        // lives in FetchHoppieAsync, which never throws.
+        private async void OnHoppieTimerElapsed(object sender, ElapsedEventArgs e) {
+            await FetchHoppieAsync();
+        }
+
+        private async Task FetchHoppieAsync() {
             string callsign = _plugin.ConnectedCallsign;
             if (callsign == null) {
                 _plugin.SendDebug("[ACARS] FetchHoppie aborted due to missing callsign");
@@ -62,20 +64,19 @@ namespace vPilot_Pushover {
             _plugin.SendDebug($"[ACARS] Fetching Hoppie data with callsign {callsign}");
 
             try {
-                HttpResponseMessage response = await _httpClient.GetAsync(url);
+                HttpResponseMessage response = await Http.Client.GetAsync(url);
                 if (response.IsSuccessStatusCode) {
-                    string body = await response.Content.ReadAsStringAsync();
-                    ParseHoppie(body);
+                    ParseHoppie(await response.Content.ReadAsStringAsync());
                 } else {
-                    _plugin.SendDebug($"[ACARS] HttpResponse request failed with status code: {response.StatusCode}");
+                    _plugin.SendDebug($"[ACARS] Hoppie request failed with status code: {response.StatusCode}");
                 }
             } catch (Exception ex) {
-                _plugin.SendDebug($"[ACARS] An HttpResponse error occurred: {ex.Message}");
+                _plugin.SendDebug($"[ACARS] Hoppie request error: {ex.Message}");
             }
         }
 
         private void ParseHoppie(string response) {
-            if (!response.StartsWith("ok")) {
+            if (!response.StartsWith("ok", StringComparison.Ordinal)) {
                 _plugin.SendDebug("[ACARS] okCheck Error: " + response);
                 return;
             }
@@ -88,12 +89,9 @@ namespace vPilot_Pushover {
 
                 string from = match.Groups[2].Value;
                 string type = match.Groups[3].Value;
-                string message = match.Groups[4].Value;
+                string message = DataPrefixPattern.Replace(match.Groups[4].Value, "").Replace("@", "");
 
-                message = DataPrefixPattern.Replace(message, "");
-                message = AtSignPattern.Replace(message, "");
-
-                if (_cacheLoaded && message != "") {
+                if (_cacheLoaded && !string.IsNullOrEmpty(message)) {
                     _ = _notifier.SendMessageAsync(message, $"{from} ({type.ToUpper()})", _priority);
                 }
 

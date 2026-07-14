@@ -51,11 +51,14 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Acars.cs" />
+    <Compile Include="Drivers\HttpNotifierBase.cs" />
     <Compile Include="Drivers\Gotify.cs" />
     <Compile Include="Drivers\Pushover.cs" />
     <Compile Include="Drivers\Telegram.cs" />
+    <Compile Include="Http.cs" />
     <Compile Include="IniFile.cs" />
     <Compile Include="INotifier.cs" />
+    <Compile Include="NotifierConfig.cs" />
     <Compile Include="Main.cs" />
     <Compile Include="Notifications\LoadFailureNotifier.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

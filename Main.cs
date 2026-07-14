@@ -1,6 +1,8 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Net.Http;
+using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -42,12 +44,10 @@ namespace vPilot_Pushover {
 
     public class Main : IPlugin {
 
-        public const string Version = "1.3.0";
-
-        private static readonly HttpClient _httpClient = new HttpClient();
+        public static readonly string Version = Assembly.GetExecutingAssembly().GetName().Version.ToString(3);
 
         // Driver factory — maps the ini Driver value to a constructor + config builder.
-        private static readonly Dictionary<string, Func<PluginSettings, Action<string>, INotifier>> _driverFactories =
+        private static readonly Dictionary<string, Func<PluginSettings, Action<string>, INotifier>> DriverFactories =
             new Dictionary<string, Func<PluginSettings, Action<string>, INotifier>>(StringComparer.OrdinalIgnoreCase) {
                 {
                     "pushover",
@@ -113,7 +113,7 @@ namespace vPilot_Pushover {
                 return;
             }
 
-            if (_settings.Driver == null || !_driverFactories.TryGetValue(_settings.Driver, out var factory)) {
+            if (_settings.Driver == null || !DriverFactories.TryGetValue(_settings.Driver, out var factory)) {
                 ReportLoadFailure("Driver not set correctly. Check your vPilot-Pushover.ini");
                 return;
             }
@@ -163,11 +163,10 @@ namespace vPilot_Pushover {
             if (_sendErrorShown) return;
             _sendErrorShown = true;
 
-            var full = $"Failed to send a notification via {_settings.Driver}: {message}";
             if (_uiContext != null) {
-                _uiContext.Post(_ => LoadFailureNotifier.Show(Name, full), null);
+                _uiContext.Post(_ => LoadFailureNotifier.Show(Name, message), null);
             } else {
-                LoadFailureNotifier.Show(Name, full);
+                LoadFailureNotifier.Show(Name, message);
             }
         }
 
@@ -213,7 +212,7 @@ namespace vPilot_Pushover {
                 }
 
                 string vPilotPath = (string)registryKey.GetValue("Install_Dir");
-                string configFile = vPilotPath + @"\Plugins\vPilot-Pushover.ini";
+                string configFile = Path.Combine(vPilotPath, "Plugins", "vPilot-Pushover.ini");
                 var ini = new IniFile(configFile);
 
                 _settings = new PluginSettings {
@@ -263,7 +262,7 @@ namespace vPilot_Pushover {
 
         private async Task CheckForUpdatesAsync() {
             try {
-                HttpResponseMessage response = await _httpClient.GetAsync(
+                HttpResponseMessage response = await Http.Client.GetAsync(
                     "https://raw.githubusercontent.com/blt950/vPilot-Pushover/main/version.txt");
 
                 if (!response.IsSuccessStatusCode) {

@@ -1,38 +1,29 @@
 using System.Collections.Generic;
-using System.Net.Http;
 using System.Threading.Tasks;
 
 namespace vPilot_Pushover.Drivers {
-    internal class Telegram : INotifier {
-
-        private static readonly HttpClient _client = new HttpClient();
+    internal class Telegram : HttpNotifierBase {
 
         private string _botToken;
         private string _chatId;
 
-        public void Initialize(NotifierConfig config) {
+        protected override void Configure(NotifierConfig config) {
             _botToken = config.TelegramBotToken;
             _chatId = config.TelegramChatId;
         }
 
-        public bool HasValidConfig() {
-            return _botToken != null && _chatId != null;
+        public override bool HasValidConfig() {
+            return !string.IsNullOrWhiteSpace(_botToken) && !string.IsNullOrWhiteSpace(_chatId);
         }
 
-        public async Task SendMessageAsync(string text, string title = "", int priority = 0) {
-            string message = $"{title}\n\n{text}";
-            string apiUrl = $"https://api.telegram.org/bot{_botToken}/sendMessage";
-
+        public override async Task SendMessageAsync(string text, string title = "", int priority = 0) {
             var values = new Dictionary<string, string>
             {
                 { "chat_id", _chatId },
-                { "text", message }
+                { "text", string.IsNullOrEmpty(title) ? text : $"{title}\n\n{text}" }
             };
 
-            using (var content = new FormUrlEncodedContent(values)) {
-                var response = await _client.PostAsync(apiUrl, content);
-                await response.Content.ReadAsStringAsync();
-            }
+            await PostFormAsync($"https://api.telegram.org/bot{_botToken}/sendMessage", values);
         }
 
     }

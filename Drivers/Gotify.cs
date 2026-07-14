@@ -1,25 +1,22 @@
 using System.Collections.Generic;
-using System.Net.Http;
 using System.Threading.Tasks;
 
 namespace vPilot_Pushover.Drivers {
-    internal class Gotify : INotifier {
-
-        private static readonly HttpClient _client = new HttpClient();
+    internal class Gotify : HttpNotifierBase {
 
         private string _url;
         private string _token;
 
-        public void Initialize(NotifierConfig config) {
+        protected override void Configure(NotifierConfig config) {
             _url = config.GotifyUrl;
             _token = config.GotifyToken;
         }
 
-        public bool HasValidConfig() {
-            return _url != null && _token != null;
+        public override bool HasValidConfig() {
+            return !string.IsNullOrWhiteSpace(_url) && !string.IsNullOrWhiteSpace(_token);
         }
 
-        public async Task SendMessageAsync(string text, string title = "", int priority = 0) {
+        public override async Task SendMessageAsync(string text, string title = "", int priority = 0) {
             var values = new Dictionary<string, string>
             {
                 { "title", title },
@@ -27,11 +24,7 @@ namespace vPilot_Pushover.Drivers {
                 { "priority", priority.ToString() }
             };
 
-            string endpoint = $"{_url}/message?token={_token}";
-            using (var content = new FormUrlEncodedContent(values)) {
-                var response = await _client.PostAsync(endpoint, content);
-                await response.Content.ReadAsStringAsync();
-            }
+            await PostFormAsync($"{_url}/message?token={_token}", values);
         }
 
     }
