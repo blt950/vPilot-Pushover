@@ -34,6 +34,8 @@ You need [vPilot](https://vpilot.rosscarlson.dev/) that you use to connect to VA
 ## Settings
 In the `vPilot-Pushover.ini` file, you can configure the following settings:
 
+Several message types below take a `Priority` value that controls how urgently the notification is delivered. This is only used by **Pushover** ([`-2` to `2`](https://pushover.net/api#priority)) and **Gotify** ([`0` to `10`](https://gotify.net/docs/priority)); **Telegram** ignores it. For Pushover, priority `2` is an emergency notification that repeats using the `HighPriRetries`/`HighPriExpire` settings until you acknowledge it.
+
 ### [General]
 `Driver` = Choose your notifier method, write `pushover`, `telegram` or `gotify` in lowercase.
 
@@ -54,19 +56,24 @@ In the `vPilot-Pushover.ini` file, you can configure the following settings:
 
 ### [Hoppie]
 `Enabled` = Whether or not to relay Hoppie messages. Set to `true` or `false`\
-`LogonCode` = Your [Hoppie](https://hoppie.nl) logon code.
+`LogonCode` = Your [Hoppie](https://hoppie.nl) logon code.\
+`Priority` = Notification priority for Hoppie/ACARS messages (see note above). Default `0`
 
 ### [RelayPrivate]
-`Enabled` = Whether or not to relay private messages. Set to `true` or `false`
+`Enabled` = Whether or not to relay private messages. Set to `true` or `false`\
+`Priority` = Notification priority for private messages (see note above). Default `1`
 
 ### [RelayRadio]
-`Enabled` = Whether or not to relay radio messages. Only sends radio messages meant for your callsign, e.g. ATC writing to you on text. Set to `true` or `false`
+`Enabled` = Whether or not to relay radio messages. Only sends radio messages meant for your callsign, e.g. ATC writing to you on text. Set to `true` or `false`\
+`Priority` = Notification priority for radio messages (see note above). Default `1`
 
-### [EnableSelcal]
-`Enabled` = Whether or not to relay SELCAL messages. Set to `true` or `false`
+### [RelaySelcal]
+`Enabled` = Whether or not to relay SELCAL messages. Set to `true` or `false`\
+`Priority` = Notification priority for SELCAL alerts (see note above). Default `1`
 
 ### [Disconnect]
-`Enabled`= Whether or not to send message when disconneted from network. Set to `true` or `false`
+`Enabled`= Whether or not to send message when disconneted from network. Set to `true` or `false`\
+`Priority` = Notification priority for disconnect messages (see note above). Default `1`
 
 ## Troubleshooting
 ### I don't receive any connected notification
