@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Net.Http;
+using System.Threading;
 using System.Threading.Tasks;
 
 using Microsoft.Win32;
@@ -23,6 +24,8 @@ namespace vPilot_Pushover {
         public string PushoverToken { get; set; }
         public string PushoverUser { get; set; }
         public string PushoverDevice { get; set; }
+        public string PushoverHighPriRetries { get; set; }
+        public string PushoverHighPriExpire { get; set; }
         public string TelegramBotToken { get; set; }
         public string TelegramChatId { get; set; }
         public string GotifyUrl { get; set; }
@@ -44,38 +47,43 @@ namespace vPilot_Pushover {
         private static readonly HttpClient _httpClient = new HttpClient();
 
         // Driver factory — maps the ini Driver value to a constructor + config builder.
-        private static readonly Dictionary<string, Func<PluginSettings, INotifier>> _driverFactories =
-            new Dictionary<string, Func<PluginSettings, INotifier>>(StringComparer.OrdinalIgnoreCase) {
+        private static readonly Dictionary<string, Func<PluginSettings, Action<string>, INotifier>> _driverFactories =
+            new Dictionary<string, Func<PluginSettings, Action<string>, INotifier>>(StringComparer.OrdinalIgnoreCase) {
                 {
                     "pushover",
-                    s => {
+                    (s, onError) => {
                         var n = new Drivers.Pushover();
                         n.Initialize(new NotifierConfig {
                             PushoverToken = s.PushoverToken,
                             PushoverUser = s.PushoverUser,
-                            PushoverDevice = s.PushoverDevice
+                            PushoverDevice = s.PushoverDevice,
+                            PushoverHighPriRetries = s.PushoverHighPriRetries,
+                            PushoverHighPriExpire = s.PushoverHighPriExpire,
+                            OnError = onError
                         });
                         return n;
                     }
                 },
                 {
                     "telegram",
-                    s => {
+                    (s, onError) => {
                         var n = new Drivers.Telegram();
                         n.Initialize(new NotifierConfig {
                             TelegramBotToken = s.TelegramBotToken,
-                            TelegramChatId = s.TelegramChatId
+                            TelegramChatId = s.TelegramChatId,
+                            OnError = onError
                         });
                         return n;
                     }
                 },
                 {
                     "gotify",
-                    s => {
+                    (s, onError) => {
                         var n = new Drivers.Gotify();
                         n.Initialize(new NotifierConfig {
                             GotifyUrl = s.GotifyUrl,
-                            GotifyToken = s.GotifyToken
+                            GotifyToken = s.GotifyToken,
+                            OnError = onError
                         });
                         return n;
                     }
@@ -87,6 +95,8 @@ namespace vPilot_Pushover {
         private Acars _acars;
         private PluginSettings _settings;
         private bool _settingsLoaded;
+        private SynchronizationContext _uiContext;
+        private bool _sendErrorShown;
 
         public string Name { get; } = "vPilot Pushover";
 
@@ -95,6 +105,7 @@ namespace vPilot_Pushover {
 
         public void Initialize(IBroker broker) {
             _vPilot = broker;
+            _uiContext = SynchronizationContext.Current;
             LoadSettings();
 
             if (!_settingsLoaded) {
@@ -107,7 +118,7 @@ namespace vPilot_Pushover {
                 return;
             }
 
-            _notifier = factory(_settings);
+            _notifier = factory(_settings, ReportSendFailure);
             if (!_notifier.HasValidConfig()) {
                 ReportLoadFailure($"{_settings.Driver} configuration is invalid. Check your vPilot-Pushover.ini");
                 return;
@@ -141,6 +152,23 @@ namespace vPilot_Pushover {
         private void ReportLoadFailure(string message) {
             SendDebug(message);
             LoadFailureNotifier.Show(Name, message);
+        }
+
+        // Surfaces a send-time failure (e.g. Pushover rejecting a message). Always logs
+        // to the vPilot debug console; shows the dialog only for the first failure so a
+        // persistent problem can't spam a modal on every message.
+        private void ReportSendFailure(string message) {
+            SendDebug($"[Send Error] {message}");
+
+            if (_sendErrorShown) return;
+            _sendErrorShown = true;
+
+            var full = $"Failed to send a notification via {_settings.Driver}: {message}";
+            if (_uiContext != null) {
+                _uiContext.Post(_ => LoadFailureNotifier.Show(Name, full), null);
+            } else {
+                LoadFailureNotifier.Show(Name, full);
+            }
         }
 
         private void OnNetworkConnected(object sender, NetworkConnectedEventArgs e) {
@@ -193,6 +221,8 @@ namespace vPilot_Pushover {
                     PushoverToken = ini.Read("ApiKey", "Pushover", null),
                     PushoverUser = ini.Read("UserKey", "Pushover", null),
                     PushoverDevice = ini.Read("Device", "Pushover", null),
+                    PushoverHighPriRetries = ini.Read("HighPriRetries", "Pushover", null),
+                    PushoverHighPriExpire = ini.Read("HighPriExpire", "Pushover", null),
                     HoppieEnabled = ParseBool(ini.Read("Enabled", "Hoppie", null)),
                     HoppieLogon = ini.Read("LogonCode", "Hoppie", null),
                     PrivateEnabled = ParseBool(ini.Read("Enabled", "RelayPrivate", null)),
