@@ -60,7 +60,7 @@ Several message types below take a `Priority` value that controls how urgently t
 `Priority` = Notification priority for Hoppie/ACARS messages (see note above). Default `0`
 
 ### [RelayPrivate]
-`Enabled` = Whether or not to relay private messages. Set to `true` or `false`\
+`Enabled` = Whether or not to relay private messages, including contact me's. Set to `true` or `false`\
 `Priority` = Notification priority for private messages (see note above). Default `1`
 
 ### [RelayRadio]
