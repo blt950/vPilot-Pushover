@@ -1,62 +1,29 @@
-﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Net.Http;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace vPilot_Pushover.Drivers {
-    internal class Telegram : INotifier {
+    internal class Telegram : HttpNotifierBase {
 
-        // Init
-        private static readonly HttpClient client = new HttpClient();
-        private String settingTelegramBotToken = null;
-        private String settingTelegramChatId = null;
+        private string _botToken;
+        private string _chatId;
 
-        /*
-         * 
-         * Initilise the driver
-         *
-        */
-        public void init( NotifierConfig config ) {
-            this.settingTelegramBotToken = config.settingTelegramBotToken;
-            this.settingTelegramChatId = config.settingTelegramChatId;
+        protected override void Configure(NotifierConfig config) {
+            _botToken = config.TelegramBotToken;
+            _chatId = config.TelegramChatId;
         }
 
-        /*
-         * 
-         * Validate the configuration
-         *
-        */
-        public Boolean hasValidConfig() {
-            if (this.settingTelegramBotToken == null || this.settingTelegramChatId == null) {
-                return false;
-            }
-            return true;
+        public override bool HasValidConfig() {
+            return !string.IsNullOrWhiteSpace(_botToken) && !string.IsNullOrWhiteSpace(_chatId);
         }
 
-        /*
-         * 
-         * Send Pushover message
-         *
-        */
-        public async void sendMessage( String text, String title = "", int priority = 0 ) {
-
-            // Construct the message for Telegram
-            string telegramMessage = $"{title}\n\n{text}";
-            // Prepare the Telegram API URL
-            string telegramApiUrl = $"https://api.telegram.org/bot{settingTelegramBotToken}/sendMessage";
-
-            // Create the form data for the POST request
+        public override async Task SendMessageAsync(string text, string title = "", int priority = 0, string source = "notification") {
             var values = new Dictionary<string, string>
             {
-                { "chat_id", settingTelegramChatId },
-                { "text", telegramMessage }
+                { "chat_id", _chatId },
+                { "text", string.IsNullOrEmpty(title) ? text : $"{title}\n\n{text}" }
             };
 
-            // Send the POST request to Telegram
-            var response = await client.PostAsync(telegramApiUrl, new FormUrlEncodedContent(values));
-            var responseString = await response.Content.ReadAsStringAsync();
+            await PostFormAsync($"https://api.telegram.org/bot{_botToken}/sendMessage", values, source);
         }
 
     }

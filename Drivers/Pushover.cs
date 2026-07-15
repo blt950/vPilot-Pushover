@@ -1,61 +1,57 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Net.Http;
-using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 namespace vPilot_Pushover.Drivers {
-    internal class Pushover : INotifier {
+    internal class Pushover : HttpNotifierBase {
 
-        // Init
-        private static readonly HttpClient client = new HttpClient();
-        private String settingPushoverToken = null;
-        private String settingPushoverUser = null;
-        private String settingPushoverDevice = null;
+        private string _token;
+        private string _user;
+        private string _device;
+        private string _highPriRetries;
+        private string _highPriExpire;
 
-        /*
-         * 
-         * Initilise the driver
-         *
-        */
-        public void init( NotifierConfig config ) {
-            this.settingPushoverToken = config.settingPushoverToken;
-            this.settingPushoverUser = config.settingPushoverUser;
-            this.settingPushoverDevice = config.settingPushoverDevice;
+        protected override void Configure(NotifierConfig config) {
+            _token = config.PushoverToken;
+            _user = config.PushoverUser;
+            _device = config.PushoverDevice;
+            _highPriRetries = config.PushoverHighPriRetries;
+            _highPriExpire = config.PushoverHighPriExpire;
         }
 
-        /*
-         * 
-         * Validate the configuration
-         *
-        */
-        public Boolean hasValidConfig() {
-            if (this.settingPushoverToken == null || this.settingPushoverUser == null) {
-                return false;
-            }
-            return true;
+        public override bool HasValidConfig() {
+            return !string.IsNullOrWhiteSpace(_token) && !string.IsNullOrWhiteSpace(_user);
         }
 
-        /*
-         * 
-         * Send Pushover message
-         *
-        */
-
-        public async void sendMessage( String text, String title = "", int priority = 0 ) {
+        public override async Task SendMessageAsync(string text, string title = "", int priority = 0, string source = "notification") {
             var values = new Dictionary<string, string>
             {
-                { "token", this.settingPushoverToken },
-                { "user", this.settingPushoverUser },
-                { "title",  title },
+                { "token", _token },
+                { "user", _user },
+                { "title", title },
                 { "message", text },
-                { "priority", priority.ToString() },
-                { "device", this.settingPushoverDevice != "" ? this.settingPushoverDevice : "" }
+                { "priority", priority.ToString() }
             };
 
-            var response = await client.PostAsync("https://api.pushover.net/1/messages.json", new FormUrlEncodedContent(values));
-            var responseString = await response.Content.ReadAsStringAsync();
+            if (!string.IsNullOrWhiteSpace(_device)) {
+                values["device"] = _device;
+            }
+
+            // retry/expire only apply to emergency priority (2), and Pushover rejects the
+            // whole message if they're out of range (retry >= 30, expire 30-10800).
+            if (priority == 2) {
+                values["retry"] = (int.TryParse(_highPriRetries, out int r) ? Math.Max(r, 30) : 30).ToString();
+                values["expire"] = (int.TryParse(_highPriExpire, out int e) ? Math.Min(Math.Max(e, 30), 10800) : 300).ToString();
+            }
+
+            await PostFormAsync("https://api.pushover.net/1/messages.json", values, source);
+        }
+
+        // Prefer Pushover's own error text (the {"errors":[...]} field) over raw JSON.
+        protected override string ExtractErrorDetail(string body) {
+            var errors = Regex.Match(body ?? "", "\"errors\":\\[(.*?)\\]");
+            return errors.Success ? errors.Groups[1].Value.Replace("\"", "") : body;
         }
 
     }

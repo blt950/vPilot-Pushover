@@ -45,16 +45,22 @@
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
     <Reference Include="System.Net.Http" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Drawing" />
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Acars.cs" />
+    <Compile Include="Drivers\HttpNotifierBase.cs" />
     <Compile Include="Drivers\Gotify.cs" />
     <Compile Include="Drivers\Pushover.cs" />
     <Compile Include="Drivers\Telegram.cs" />
+    <Compile Include="Http.cs" />
     <Compile Include="IniFile.cs" />
     <Compile Include="INotifier.cs" />
+    <Compile Include="NotifierConfig.cs" />
     <Compile Include="Main.cs" />
+    <Compile Include="Notifications\ErrorNotifier.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
