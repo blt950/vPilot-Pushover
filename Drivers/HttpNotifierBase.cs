@@ -17,7 +17,7 @@ namespace vPilot_Pushover.Drivers {
         }
 
         public abstract bool HasValidConfig();
-        public abstract Task SendMessageAsync(string text, string title = "", int priority = 0);
+        public abstract Task SendMessageAsync(string text, string title = "", int priority = 0, string source = "notification");
 
         // Reads the driver-specific settings out of the shared config.
         protected abstract void Configure(NotifierConfig config);
@@ -27,18 +27,18 @@ namespace vPilot_Pushover.Drivers {
             return body;
         }
 
-        protected async Task PostFormAsync(string url, Dictionary<string, string> values) {
+        protected async Task PostFormAsync(string url, Dictionary<string, string> values, string source) {
             try {
                 using (var content = new FormUrlEncodedContent(values)) {
                     var response = await Http.Client.PostAsync(url, content);
                     var body = await response.Content.ReadAsStringAsync();
 
                     if (!response.IsSuccessStatusCode) {
-                        _onError?.Invoke($"{GetType().Name} rejected the notification (HTTP {(int)response.StatusCode}): {ExtractErrorDetail(body)}");
+                        _onError?.Invoke($"{GetType().Name} rejected the {source} (HTTP {(int)response.StatusCode}): {ExtractErrorDetail(body)}");
                     }
                 }
             } catch (Exception ex) {
-                _onError?.Invoke($"{GetType().Name} request failed: {ex.Message}");
+                _onError?.Invoke($"{GetType().Name} failed sending the {source}: {ex.Message}");
             }
         }
 

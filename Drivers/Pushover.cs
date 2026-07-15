@@ -24,7 +24,7 @@ namespace vPilot_Pushover.Drivers {
             return !string.IsNullOrWhiteSpace(_token) && !string.IsNullOrWhiteSpace(_user);
         }
 
-        public override async Task SendMessageAsync(string text, string title = "", int priority = 0) {
+        public override async Task SendMessageAsync(string text, string title = "", int priority = 0, string source = "notification") {
             var values = new Dictionary<string, string>
             {
                 { "token", _token },
@@ -45,7 +45,7 @@ namespace vPilot_Pushover.Drivers {
                 values["expire"] = (int.TryParse(_highPriExpire, out int e) ? Math.Min(Math.Max(e, 30), 10800) : 300).ToString();
             }
 
-            await PostFormAsync("https://api.pushover.net/1/messages.json", values);
+            await PostFormAsync("https://api.pushover.net/1/messages.json", values, source);
         }
 
         // Prefer Pushover's own error text (the {"errors":[...]} field) over raw JSON.

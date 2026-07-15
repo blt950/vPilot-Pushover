@@ -124,7 +124,7 @@ namespace vPilot_Pushover {
                 return;
             }
 
-            SendDebug($"Driver set to {_settings.Driver}");
+            SendDebug($"Driver set to {char.ToUpper(_settings.Driver[0]) + _settings.Driver.Substring(1)}");
 
             // Subscribe to events according to settings
             _vPilot.NetworkConnected += OnNetworkConnected;
@@ -139,7 +139,7 @@ namespace vPilot_Pushover {
                 _acars.Initialize(this, _notifier, _settings.HoppieLogon, _settings.HoppiePriority);
             }
 
-            _ = _notifier.SendMessageAsync($"Connected. Running version v{Version}");
+            _ = _notifier.SendMessageAsync($"Connected. Running version v{Version}", source: "startup message");
             SendDebug($"{Name} connected and enabled on v{Version}");
 
             _ = CheckForUpdatesAsync();
@@ -151,7 +151,7 @@ namespace vPilot_Pushover {
 
         private void ReportLoadFailure(string message) {
             SendDebug(message);
-            LoadFailureNotifier.Show(Name, message);
+            ErrorNotifier.Show(Name, message);
         }
 
         // Surfaces a send-time failure (e.g. Pushover rejecting a message). Always logs
@@ -164,9 +164,9 @@ namespace vPilot_Pushover {
             _sendErrorShown = true;
 
             if (_uiContext != null) {
-                _uiContext.Post(_ => LoadFailureNotifier.Show(Name, message), null);
+                _uiContext.Post(_ => ErrorNotifier.Show(Name, message, showTroubleshootingGuide: false), null);
             } else {
-                LoadFailureNotifier.Show(Name, message);
+                ErrorNotifier.Show(Name, message, showTroubleshootingGuide: false);
             }
         }
 
@@ -186,22 +186,22 @@ namespace vPilot_Pushover {
             }
 
             if (_settings.DisconnectEnabled) {
-                _ = _notifier.SendMessageAsync("Disconnected from network", "vPilot", _settings.DisconnectPriority);
+                _ = _notifier.SendMessageAsync("Disconnected from network", "vPilot", _settings.DisconnectPriority, "disconnect message (Disconnect)");
             }
         }
 
         private void OnPrivateMessageReceived(object sender, PrivateMessageReceivedEventArgs e) {
-            _ = _notifier.SendMessageAsync(e.Message, e.From, _settings.PrivatePriority);
+            _ = _notifier.SendMessageAsync(e.Message, e.From, _settings.PrivatePriority, "private message (RelayPrivate)");
         }
 
         private void OnRadioMessageReceived(object sender, RadioMessageReceivedEventArgs e) {
             if (ConnectedCallsign != null && e.Message.Contains(ConnectedCallsign)) {
-                _ = _notifier.SendMessageAsync(e.Message, e.From, _settings.RadioPriority);
+                _ = _notifier.SendMessageAsync(e.Message, e.From, _settings.RadioPriority, "radio message (RelayRadio)");
             }
         }
 
         private void OnSelcalAlertReceived(object sender, SelcalAlertReceivedEventArgs e) {
-            _ = _notifier.SendMessageAsync("SELCAL Alert", e.From, _settings.SelcalPriority);
+            _ = _notifier.SendMessageAsync("SELCAL Alert", e.From, _settings.SelcalPriority, "SELCAL alert (RelaySelcal)");
         }
 
         private void LoadSettings() {
@@ -276,7 +276,7 @@ namespace vPilot_Pushover {
                     SendDebug($"Update available. Latest version is v{latest}");
                     await _notifier.SendMessageAsync(
                         $"Update available. Latest version is v{latest}. Download newest version at https://blt950.com",
-                        $"{Name} Plugin");
+                        $"{Name} Plugin", source: "update notice");
                 }
             } catch (Exception ex) {
                 SendDebug($"[Update Checker] An HttpResponse error occurred: {ex.Message}");

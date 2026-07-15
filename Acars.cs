@@ -92,7 +92,7 @@ namespace vPilot_Pushover {
                 string message = DataPrefixPattern.Replace(match.Groups[4].Value, "").Replace("@", "");
 
                 if (_cacheLoaded && !string.IsNullOrEmpty(message)) {
-                    _ = _notifier.SendMessageAsync(message, $"{from} ({type.ToUpper()})", _priority);
+                    _ = _notifier.SendMessageAsync(message, $"{from} ({type.ToUpper()})", _priority, "ACARS message (Hoppie)");
                 }
 
                 _plugin.SendDebug($"[ACARS] Cached {key} with message: {message}");

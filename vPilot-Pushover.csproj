@@ -60,7 +60,7 @@
     <Compile Include="INotifier.cs" />
     <Compile Include="NotifierConfig.cs" />
     <Compile Include="Main.cs" />
-    <Compile Include="Notifications\LoadFailureNotifier.cs" />
+    <Compile Include="Notifications\ErrorNotifier.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

@@ -16,7 +16,7 @@ namespace vPilot_Pushover.Drivers {
             return !string.IsNullOrWhiteSpace(_url) && !string.IsNullOrWhiteSpace(_token);
         }
 
-        public override async Task SendMessageAsync(string text, string title = "", int priority = 0) {
+        public override async Task SendMessageAsync(string text, string title = "", int priority = 0, string source = "notification") {
             var values = new Dictionary<string, string>
             {
                 { "title", title },
@@ -24,7 +24,7 @@ namespace vPilot_Pushover.Drivers {
                 { "priority", priority.ToString() }
             };
 
-            await PostFormAsync($"{_url}/message?token={_token}", values);
+            await PostFormAsync($"{_url}/message?token={_token}", values, source);
         }
 
     }
