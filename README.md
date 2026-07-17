@@ -23,6 +23,10 @@ You need [vPilot](https://vpilot.rosscarlson.dev/) that you use to connect to VA
 - It's required to install gotify server beforehand. Check [Gotify Docs](https://gotify.net/docs/index) for more infomation
 - Please note that only Android phone is officially supported by them. See [this](https://github.com/gotify/android)
 
+### Ntfy.sh
+- "Create or choose a topic name at https://ntfy.sh (or run your own server), and use it as the Url."
+
+
 ## Installation
 
 1. Make sure your vPilot is not running

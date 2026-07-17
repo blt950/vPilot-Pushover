@@ -1,7 +1,5 @@
 using System;
-
 namespace vPilot_Pushover {
-
     public class NotifierConfig {
         public string PushoverToken { get; set; }
         public string PushoverUser { get; set; }
@@ -12,8 +10,8 @@ namespace vPilot_Pushover {
         public string TelegramChatId { get; set; }
         public string GotifyUrl { get; set; }
         public string GotifyToken { get; set; }
-
-        // Invoked by a driver when a send fails, so the host can log and notify the user.
+        public string NtfyUrl { get; set; }
+        public string NtfyToken { get; set; }
         public Action<string> OnError { get; set; }
     }
 }
