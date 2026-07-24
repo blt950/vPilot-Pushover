@@ -55,6 +55,7 @@
     <Compile Include="Drivers\Gotify.cs" />
     <Compile Include="Drivers\Pushover.cs" />
     <Compile Include="Drivers\Telegram.cs" />
+    <Compile Include="Drivers\Bark.cs" />
     <Compile Include="Http.cs" />
     <Compile Include="IniFile.cs" />
     <Compile Include="INotifier.cs" />
