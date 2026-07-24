@@ -71,6 +71,9 @@ Several message types below take a `Priority` value that controls how urgently t
 `Enabled` = Whether or not to relay SELCAL messages. Set to `true` or `false`\
 `Priority` = Notification priority for SELCAL alerts (see note above). Default `1`
 
+### [Connection]
+`Enabled` = Whether or not to send message when opening vPilot. Set to `true` or `false`\
+
 ### [Disconnect]
 `Enabled`= Whether or not to send message when disconneted from network. Set to `true` or `false`\
 `Priority` = Notification priority for disconnect messages (see note above). Default `1`
