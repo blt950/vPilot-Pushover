@@ -75,6 +75,16 @@ Several message types below take a `Priority` value that controls how urgently t
 `Enabled`= Whether or not to send message when disconneted from network. Set to `true` or `false`\
 `Priority` = Notification priority for disconnect messages (see note above). Default `1`
 
+<details>
+<summary><strong>Advanced Options</strong></summary> 
+
+> [!NOTE]  
+> It is recommended to leave the connection notification enabled. It verifies that the plugin can communicate with your chosen notification service when vPilot starts, and alerts you immediately if there is a configuration or authentication problem (such as incorrect credentials), and provides a useful indicator when troubleshooting plugin issues. However if you prefer not to receive this startup notification, you can disable it using the setting below.
+
+### [SilentStartup]
+`Enabled` = Will start vPilot silently without the startup notification. Set to `true` or `false`\
+</details>
+
 ## Troubleshooting
 ### I don't receive any connected notification
 - Make sure you have placed the plugin in the correct folder, usually like this `C:\Users\<your username>\AppData\Local\vPilot\Plugins\vPilot-Pushover.dll` and `.ini` in the same folder.

@@ -22,6 +22,7 @@ namespace vPilot_Pushover {
         public bool SelcalEnabled { get; set; }
         public bool HoppieEnabled { get; set; }
         public bool DisconnectEnabled { get; set; }
+        public bool SilentStartupEnabled { get; set; }
         public string HoppieLogon { get; set; }
         public string PushoverToken { get; set; }
         public string PushoverUser { get; set; }
@@ -139,8 +140,15 @@ namespace vPilot_Pushover {
                 _acars.Initialize(this, _notifier, _settings.HoppieLogon, _settings.HoppiePriority);
             }
 
-            _ = _notifier.SendMessageAsync($"Connected. Running version v{Version}", source: "startup message");
-            SendDebug($"{Name} connected and enabled on v{Version}");
+            if (!_settings.SilentStartupEnabled)
+            {
+                _ = _notifier.SendMessageAsync(
+                    $"Connected. Running version v{Version}",
+                    source: "startup message");
+            } else {
+                SendDebug($"Running version v{Version}.");
+                SendDebug($"Warning: Silent Startup enabled!");
+            }
 
             _ = CheckForUpdatesAsync();
         }
@@ -229,6 +237,7 @@ namespace vPilot_Pushover {
                     SelcalEnabled = ParseBool(ini.Read("Enabled", "RelaySelcal", null)),
                     TelegramBotToken = ini.Read("BotToken", "Telegram", null),
                     TelegramChatId = ini.Read("ChatId", "Telegram", null),
+                    SilentStartupEnabled = ParseBool(ini.Read("Enabled", "SilentStartup", null)),
                     DisconnectEnabled = ParseBool(ini.Read("Enabled", "Disconnect", null)),
                     GotifyUrl = ini.Read("Url", "Gotify", null),
                     GotifyToken = ini.Read("Token", "Gotify", null),
