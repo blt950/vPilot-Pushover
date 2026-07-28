@@ -145,6 +145,9 @@ namespace vPilot_Pushover {
                 _ = _notifier.SendMessageAsync(
                     $"Connected. Running version v{Version}",
                     source: "startup message");
+            } else {
+                SendDebug($"Running version v{Version}.");
+                SendDebug($"Warning: Silent Startup enabled!");
             }
 
             _ = CheckForUpdatesAsync();
