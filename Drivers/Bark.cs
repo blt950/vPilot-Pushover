@@ -6,10 +6,12 @@ namespace vPilot_Pushover.Drivers {
 
         private string _url;
         private string _key;
+        private string _notificationGroup;
 
         protected override void Configure(NotifierConfig config) {
             _url = config.BarkUrl;
             _key = config.BarkKey;
+            _notificationGroup = config.BarkNotificationGroup;
         }
 
         public override bool HasValidConfig() {
@@ -33,7 +35,8 @@ namespace vPilot_Pushover.Drivers {
             var values = new Dictionary<string, string> {
                 { "title", title },
                 { "body", text },
-                { "level", level }
+                { "level", level },
+                { "group", _notificationGroup } // Groups notifications in iOS notification centre
             };
 
             // Prevents double-slashes if user leaves a trailing slash in the config URL

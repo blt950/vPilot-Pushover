@@ -14,6 +14,7 @@ namespace vPilot_Pushover {
         public string GotifyToken { get; set; }
         public string BarkUrl { get; set; }
         public string BarkKey { get; set; }
+        public string BarkNotificationGroup { get; set; }
 
         // Invoked by a driver when a send fails, so the host can log and notify the user.
         public Action<string> OnError { get; set; }
