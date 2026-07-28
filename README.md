@@ -78,11 +78,9 @@ Several message types below take a `Priority` value that controls how urgently t
 <details>
 <summary><strong>Advanced Options</strong></summary> 
 
-> [!NOTE]  
-> It is recommended to leave the connection notification enabled. It verifies that the plugin can communicate with your chosen notification service when vPilot starts, and alerts you immediately if there is a configuration or authentication problem (such as incorrect credentials), and provides a useful indicator when troubleshooting plugin issues. However if you prefer not to receive this startup notification, you can disable it using the setting below.
-
 ### [SilentStartup]
 `Enabled` = Will start vPilot silently without the startup notification. Set to `true` or `false`\
+⚠️ **Warning:** Connection notification verifies that the plugin communicates with the drver when vPilot starts and alerts you immediately if there's an issue. We don't offer support if you turn this off.
 </details>
 
 ## Troubleshooting
