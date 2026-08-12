@@ -38,7 +38,7 @@ namespace vPilot_Pushover.Drivers {
                     }
                 }
             } catch (Exception ex) {
-                _onError?.Invoke($"{GetType().Name} failed sending the {source}: {ex.Message}");
+                _onError?.Invoke($"{GetType().Name} failed sending the {source}: {ex.GetBaseException().Message}");
             }
         }
 
