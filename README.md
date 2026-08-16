@@ -1,7 +1,7 @@
 # vPilot Pushover
 [![Github All Releases](https://img.shields.io/github/downloads/blt950/vPilot-Pushover/total.svg)]()
 
-Relay [vPilot](https://vpilot.rosscarlson.dev/) and [Hoppie](https://www.hoppie.nl/acars/) messages to your mobile device via [Pushover](https://pushover.net/), [Telegram](https://telegram.org/) or [Gotify](https://gotify.net/).\
+Relay [vPilot](https://vpilot.rosscarlson.dev/) and [Hoppie](https://www.hoppie.nl/acars/) messages to your mobile device via [Pushover](https://pushover.net/), [Telegram](https://telegram.org/), [Gotify](https://gotify.net/) or [Bark](https://bark.day.app/#/en-us/?id=bark).\
 Hoppie is integrated directly, meaning you can use any aircraft with this plugin.
 
 ![Image of example notification of contact me](https://github.com/blt950/vPilot-Pushover/assets/2505044/68653e8a-8bca-45d4-8220-4a38f39d68d4)
@@ -23,6 +23,10 @@ You need [vPilot](https://vpilot.rosscarlson.dev/) that you use to connect to VA
 - It's required to install gotify server beforehand. Check [Gotify Docs](https://gotify.net/docs/index) for more infomation
 - Please note that only Android phone is officially supported by them. See [this](https://github.com/gotify/android)
 
+### Bark
+- Install the iOS App from the [App Store](https://apps.apple.com/us/app/bark-custom-notifications/id1403753865)
+- (Optional) Set up a self-hosted backend server using [Finb/bark-server](https://github.com/Finb/bark-server) following the [Deployment Guide](https://bark.day.app/#/en-us/deploy)
+
 ## Installation
 
 1. Make sure your vPilot is not running
@@ -34,10 +38,10 @@ You need [vPilot](https://vpilot.rosscarlson.dev/) that you use to connect to VA
 ## Settings
 In the `vPilot-Pushover.ini` file, you can configure the following settings:
 
-Several message types below take a `Priority` value that controls how urgently the notification is delivered. This is only used by **Pushover** ([`-2` to `2`](https://pushover.net/api#priority)) and **Gotify** ([`0` to `10`](https://gotify.net/docs/priority)); **Telegram** ignores it. For Pushover, priority `2` is an emergency notification that repeats using the `HighPriRetries`/`HighPriExpire` settings until you acknowledge it.
+Several message types below take a `Priority` value that controls how urgently the notification is delivered. This is only used by **Pushover** ([`-2` to `2`](https://pushover.net/api#priority)), **Gotify** ([`0` to `10`](https://gotify.net/docs/priority)) and **Bark** (`-1` to `2`, mapping to `passive`, `active`, `timeSensitive` and `critical` levels - [see docs](https://bark.day.app/#/en-us/tutorial?id=request-parameters)); **Telegram** ignores it. For Pushover, priority `2` is an emergency notification that repeats using the `HighPriRetries`/`HighPriExpire` settings until you acknowledge it.
 
 ### [General]
-`Driver` = Choose your notifier method, write `pushover`, `telegram` or `gotify` in lowercase.
+`Driver` = Choose your notifier method, write `pushover`, `telegram`, `gotify` or `bark` in lowercase.
 
 ### [Pushover]
 `UserKey` = Your Pushover user key. You can find this on the [Pushover dashboard](https://pushover.net/)\
@@ -53,6 +57,10 @@ Several message types below take a `Priority` value that controls how urgently t
 ### [Gotify]
 `Url` = Your Gotify server address. For example, `https://push.example.com`, `https://example.com/gotify`, depending on your server configuration.\
 `Token` = Your Gotify application token. see [this](https://gotify.net/docs/pushmsg)
+
+### [Bark]
+`Url` = Your Bark server address. Defaults to `https://api.day.app` unless you self-host a backend server with a custom domain.\
+`Key` = Your Bark push key. Follow the [Tutorial](https://bark.day.app/#/en-us/tutorial) to obtain your key.
 
 ### [Hoppie]
 `Enabled` = Whether or not to relay Hoppie messages. Set to `true` or `false`\

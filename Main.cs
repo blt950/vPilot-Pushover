@@ -33,6 +33,9 @@ namespace vPilot_Pushover {
         public string TelegramChatId { get; set; }
         public string GotifyUrl { get; set; }
         public string GotifyToken { get; set; }
+        public string BarkUrl { get; set; }
+        public string BarkKey { get; set; }
+        public string BarkNotificationGroup { get; set; }
 
         // Per-message-type priority, passed through to the driver.
         // Driver semantics: Pushover -2..2, Gotify 0..10, Telegram ignored.
@@ -84,6 +87,19 @@ namespace vPilot_Pushover {
                         n.Initialize(new NotifierConfig {
                             GotifyUrl = s.GotifyUrl,
                             GotifyToken = s.GotifyToken,
+                            OnError = onError
+                        });
+                        return n;
+                    }
+                },
+                {
+                    "bark",
+                    (s, onError) => {
+                        var n = new Drivers.Bark();
+                        n.Initialize(new NotifierConfig {
+                            BarkUrl = s.BarkUrl,
+                            BarkKey = s.BarkKey,
+                            BarkNotificationGroup = s.BarkNotificationGroup,
                             OnError = onError
                         });
                         return n;
@@ -241,6 +257,9 @@ namespace vPilot_Pushover {
                     DisconnectEnabled = ParseBool(ini.Read("Enabled", "Disconnect", null)),
                     GotifyUrl = ini.Read("Url", "Gotify", null),
                     GotifyToken = ini.Read("Token", "Gotify", null),
+                    BarkUrl = ini.Read("Url", "Bark", null),
+                    BarkKey = ini.Read("Key", "Bark", null),
+                    BarkNotificationGroup = ini.Read("NotificationGroup", "Bark", null),
 
                     PrivatePriority = ParseInt(ini.Read("Priority", "RelayPrivate", null), 1),
                     RadioPriority = ParseInt(ini.Read("Priority", "RelayRadio", null), 1),
