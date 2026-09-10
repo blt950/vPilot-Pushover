@@ -29,6 +29,7 @@ You need [vPilot](https://vpilot.rosscarlson.dev/) that you use to connect to VA
 
 ### MQTT
 - Use any MQTT 3.1.1-compatible broker. Messages are published at QoS 0.
+- The payload is JSON with separate `title`, `message`, `priority`, and `source` properties.
 - TLS is supported with broker hostname certificate validation.
 
 ## Installation

@@ -5,6 +5,7 @@ using System.Net.Sockets;
 using System.Security.Authentication;
 using System.Text;
 using System.Threading.Tasks;
+using System.Web.Script.Serialization;
 
 namespace vPilot_Pushover.Drivers {
     internal class Mqtt : INotifier {
@@ -51,8 +52,13 @@ namespace vPilot_Pushover.Drivers {
                             throw new InvalidOperationException($"MQTT broker rejected the connection (return code {connAck[3]}).");
                         }
 
-                        string message = string.IsNullOrEmpty(title) ? text : $"{title}\n\n{text}";
-                        await WritePacketAsync(stream, CreatePublishPacket(message));
+                        string payload = new JavaScriptSerializer().Serialize(new {
+                            title,
+                            message = text,
+                            priority,
+                            source
+                        });
+                        await WritePacketAsync(stream, CreatePublishPacket(payload));
                         await WritePacketAsync(stream, new byte[] { 0xE0, 0x00 });
                     }
                 }
@@ -84,10 +90,10 @@ namespace vPilot_Pushover.Drivers {
             }
         }
 
-        private byte[] CreatePublishPacket(string message) {
+        private byte[] CreatePublishPacket(string payloadText) {
             using (var body = new MemoryStream()) {
                 WriteString(body, _topic);
-                byte[] payload = Encoding.UTF8.GetBytes(message);
+            byte[] payload = Encoding.UTF8.GetBytes(payloadText);
                 body.Write(payload, 0, payload.Length);
                 return AddHeader(0x30, body.ToArray());
             }
