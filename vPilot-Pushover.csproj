@@ -32,11 +32,13 @@
   </PropertyGroup>
   <PropertyGroup>
     <SignAssembly>false</SignAssembly>
+    <!-- Set VpilotPluginsPath in Directory.Build.props or pass -p:VpilotPluginsPath=... -->
+    <VpilotPluginsPath Condition="'$(VpilotPluginsPath)' == '' and '$(VPILOT_PLUGINS_DLL)' != ''">$(VPILOT_PLUGINS_DLL)</VpilotPluginsPath>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="RossCarlson.Vatsim.Vpilot.Plugins, Version=3.9.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>F:\VATSIM\vPilot\RossCarlson.Vatsim.Vpilot.Plugins.dll</HintPath>
+      <HintPath>$(VpilotPluginsPath)</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
