@@ -1,0 +1,6 @@
+<Project>
+  <PropertyGroup>
+    <!-- Change this to the vPilot SDK DLL on your development machine. -->
+    <VpilotPluginsPath>F:\VATSIM\vPilot\RossCarlson.Vatsim.Vpilot.Plugins.dll</VpilotPluginsPath>
+  </PropertyGroup>
+</Project>

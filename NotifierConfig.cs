@@ -15,6 +15,12 @@ namespace vPilot_Pushover {
         public string BarkUrl { get; set; }
         public string BarkKey { get; set; }
         public string BarkNotificationGroup { get; set; }
+        public string MqttHost { get; set; }
+        public string MqttPort { get; set; }
+        public string MqttTopic { get; set; }
+        public string MqttUsername { get; set; }
+        public string MqttPassword { get; set; }
+        public string MqttUseTls { get; set; }
 
         // Invoked by a driver when a send fails, so the host can log and notify the user.
         public Action<string> OnError { get; set; }
