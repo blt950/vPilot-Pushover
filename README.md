@@ -40,22 +40,6 @@ You need [vPilot](https://vpilot.rosscarlson.dev/) that you use to connect to VA
 4. Open `vPilot-Pushover.ini` in a text editor and configure your desired [settings](#settings)
 5. When you start vPilot you should now get an "Connected. Running version x.x.x" push notification. If not, see [troubleshooting](#troubleshooting) below.
 
-## Building
-
-The project references the vPilot SDK assembly used by the plugin API. Its location is different between developer machines, so it is not hard-coded in the project file.
-
-1. Copy `Directory.Build.props.example` to `Directory.Build.props`.
-2. Set `VpilotPluginsPath` to the full path of `RossCarlson.Vatsim.Vpilot.Plugins.dll` on your machine.
-3. Run `dotnet build`.
-
-You can also set the path for one build without creating the local props file:
-
-```powershell
-dotnet build -p:VpilotPluginsPath="C:\path\to\RossCarlson.Vatsim.Vpilot.Plugins.dll"
-```
-
-The `VPILOT_PLUGINS_DLL` environment variable is also supported.
-
 ## Settings
 In the `vPilot-Pushover.ini` file, you can configure the following settings:
 
@@ -89,7 +73,8 @@ Several message types below take a `Priority` value that controls how urgently t
 `Topic` = MQTT topic to publish notifications to. Required.\
 `Username` = Optional broker username.\
 `Password` = Optional broker password.\
-`UseTls` = Whether to use TLS. Set to `true` or `false`; defaults to `false`.
+`UseTls` = Whether to use TLS. Set to `true` or `false`; defaults to `false`.\
+See [this MQTT guide](mqtt.md) if you intend to use MQTT with Home Assistant.
 
 ### [Hoppie]
 `Enabled` = Whether or not to relay Hoppie messages. Set to `true` or `false`\
@@ -132,3 +117,19 @@ Several message types below take a `Priority` value that controls how urgently t
 ## Contribution
 
 Feel free to contribute by creating pull requests or issues in this Github!
+
+### Building
+
+The project references the vPilot SDK assembly used by the plugin API. Its location is different between developer machines, so it is not hard-coded in the project file.
+
+1. Copy `Directory.Build.props.example` to `Directory.Build.props`.
+2. Set `VpilotPluginsPath` to the full path of `RossCarlson.Vatsim.Vpilot.Plugins.dll` on your machine.
+3. Run `dotnet build`.
+
+You can also set the path for one build without creating the local props file:
+
+```powershell
+dotnet build -p:VpilotPluginsPath="C:\path\to\RossCarlson.Vatsim.Vpilot.Plugins.dll"
+```
+
+The `VPILOT_PLUGINS_DLL` environment variable is also supported.
