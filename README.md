@@ -67,7 +67,7 @@ Several message types below take a `Priority` value that controls how urgently t
 `Url` = Your Bark server address. Defaults to `https://api.day.app` unless you self-host a backend server with a custom domain.\
 `Key` = Your Bark push key. Follow the [Tutorial](https://bark.day.app/#/en-us/tutorial) to obtain your key.
 
-### [MQTT]
+### [MQTT] by [@rick2909](https://github.com/rick2909)
 `Host` = MQTT broker hostname or IP address. Required.\
 `Port` = MQTT broker port. Defaults to `1883`, or `8883` when `UseTls=true`.\
 `Topic` = MQTT topic to publish notifications to. Required.\
