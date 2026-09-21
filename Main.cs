@@ -36,6 +36,12 @@ namespace vPilot_Pushover {
         public string BarkUrl { get; set; }
         public string BarkKey { get; set; }
         public string BarkNotificationGroup { get; set; }
+        public string MqttHost { get; set; }
+        public string MqttPort { get; set; }
+        public string MqttTopic { get; set; }
+        public string MqttUsername { get; set; }
+        public string MqttPassword { get; set; }
+        public string MqttUseTls { get; set; }
 
         // Per-message-type priority, passed through to the driver.
         // Driver semantics: Pushover -2..2, Gotify 0..10, Telegram ignored.
@@ -100,6 +106,22 @@ namespace vPilot_Pushover {
                             BarkUrl = s.BarkUrl,
                             BarkKey = s.BarkKey,
                             BarkNotificationGroup = s.BarkNotificationGroup,
+                            OnError = onError
+                        });
+                        return n;
+                    }
+                },
+                {
+                    "mqtt",
+                    (s, onError) => {
+                        var n = new Drivers.Mqtt();
+                        n.Initialize(new NotifierConfig {
+                            MqttHost = s.MqttHost,
+                            MqttPort = s.MqttPort,
+                            MqttTopic = s.MqttTopic,
+                            MqttUsername = s.MqttUsername,
+                            MqttPassword = s.MqttPassword,
+                            MqttUseTls = s.MqttUseTls,
                             OnError = onError
                         });
                         return n;
@@ -260,6 +282,12 @@ namespace vPilot_Pushover {
                     BarkUrl = ini.Read("Url", "Bark", null),
                     BarkKey = ini.Read("Key", "Bark", null),
                     BarkNotificationGroup = ini.Read("NotificationGroup", "Bark", null),
+                    MqttHost = ini.Read("Host", "MQTT", null),
+                    MqttPort = ini.Read("Port", "MQTT", null),
+                    MqttTopic = ini.Read("Topic", "MQTT", null),
+                    MqttUsername = ini.Read("Username", "MQTT", null),
+                    MqttPassword = ini.Read("Password", "MQTT", null),
+                    MqttUseTls = ini.Read("UseTls", "MQTT", null),
 
                     PrivatePriority = ParseInt(ini.Read("Priority", "RelayPrivate", null), 1),
                     RadioPriority = ParseInt(ini.Read("Priority", "RelayRadio", null), 1),
