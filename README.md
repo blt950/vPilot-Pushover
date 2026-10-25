@@ -55,15 +55,15 @@ Several message types below take a `Priority` value that controls how urgently t
 `HighPriRetries` = How often, in seconds, Pushover re-alerts an unacknowledged high priority (priority `2`) notification until you acknowledge it. Minimum `30`. Default `30`\
 `HighPriExpire` = How long, in seconds, Pushover keeps retrying a high priority notification before giving up. Maximum `10800`. Default `300` (5 minutes)
 
-### [Telegram]
+### [Telegram] by [@rensdebee](https://github.com/rensdebee)
 `BotToken` = Your Telgram bot API key, see [this](telegram.md) for instructions\
 `ChatId` = Your Telgram bots chat id key, see [this](telegram.md) for instructions
 
-### [Gotify]
+### [Gotify] by [@nonenty](https://github.com/nonenty)
 `Url` = Your Gotify server address. For example, `https://push.example.com`, `https://example.com/gotify`, depending on your server configuration.\
 `Token` = Your Gotify application token. see [this](https://gotify.net/docs/pushmsg)
 
-### [Bark]
+### [Bark] by [@PorridgePi](https://github.com/PorridgePi)
 `Url` = Your Bark server address. Defaults to `https://api.day.app` unless you self-host a backend server with a custom domain.\
 `Key` = Your Bark push key. Follow the [Tutorial](https://bark.day.app/#/en-us/tutorial) to obtain your key.
 
