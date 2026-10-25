@@ -1,8 +1,7 @@
 # vPilot Pushover
 [![Github All Releases](https://img.shields.io/github/downloads/blt950/vPilot-Pushover/total.svg)](https://github.com/blt950/vPilot-Pushover/releases)
 
-Relay [vPilot](https://vpilot.rosscarlson.dev/) and [Hoppie](https://www.hoppie.nl/acars/) messages to your mobile device via [Pushover](https://pushover.net/), [Telegram](https://telegram.org/), [Gotify](https://gotify.net/) or [Bark](https://bark.day.app/#/en-us/?id=bark), or publish them to an MQTT broker.\
-Hoppie is integrated directly, meaning you can use any aircraft with this plugin.
+Relay [vPilot](https://vpilot.rosscarlson.dev/) and [Hoppie](https://www.hoppie.nl/acars/) messages to your mobile device via [Pushover](https://pushover.net/), [Telegram](https://telegram.org/), [Gotify](https://gotify.net/) or [Bark](https://bark.day.app/#/en-us/?id=bark), or publish them to an MQTT broker. Hoppie is integrated directly, meaning you can use any aircraft with this plugin.
 
 ![Image of example notification of contact me](https://github.com/blt950/vPilot-Pushover/assets/2505044/68653e8a-8bca-45d4-8220-4a38f39d68d4)
 
@@ -45,7 +44,7 @@ You can only use **one** notifier at a time. Expand the one you set as `Driver` 
 |---|---|---|
 | `UserKey` | Your Pushover user key. You can find this on the [Pushover dashboard](https://pushover.net/) | *required* |
 | `ApiKey` | Your Pushover API key. You need to [create this yourself in Pushover](https://pushover.net/apps/build) | *required* |
-| `Device` | The device name to send the notifications to. If you leave this blank, it will send to all devices. If you want to specify multiple devices, separate them with a comma, e.g. `iphone,nexus5` | all devices |
+| `Device` | The device name to send the notifications to. If you leave this blank, it will send to all devices. If you want to specify multiple devices, separate them with a comma, e.g. `iphone,nexus5` | blank |
 | `HighPriRetries` | How often, in seconds, Pushover re-alerts an unacknowledged high priority (priority `2`) notification until you acknowledge it. Minimum `30` | `30` |
 | `HighPriExpire` | How long, in seconds, Pushover keeps retrying a high priority notification before giving up. Maximum `10800` | `300` (5 minutes) |
 
@@ -170,8 +169,8 @@ Each message type below has an `Enabled` key (`true` or `false`) and a `Priority
 
 Feel free to contribute by creating pull requests or issues in this Github!
 
-### Building
-
+<details>
+<summary><strong>How to build the project</strong></summary>
 The project references the vPilot SDK assembly used by the plugin API. Its location is different between developer machines, so it is not hard-coded in the project file.
 
 1. Copy `Directory.Build.props.example` to `Directory.Build.props`.
@@ -185,3 +184,4 @@ dotnet build -p:VpilotPluginsPath="C:\path\to\RossCarlson.Vatsim.Vpilot.Plugins.
 ```
 
 The `VPILOT_PLUGINS_DLL` environment variable is also supported.
+</details>
